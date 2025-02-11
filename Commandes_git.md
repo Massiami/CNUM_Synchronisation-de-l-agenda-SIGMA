@@ -9,4 +9,5 @@
   > git commit ProjetCNUM.md -m"présentation des attendus du projet"
 * **git push origin main** --> *envoyer version sur Github*
 * **git pull** --> *récupérer dernière version sur Github*
-
+* **git blame** --> *consulter l'historique des modifications*
+  
