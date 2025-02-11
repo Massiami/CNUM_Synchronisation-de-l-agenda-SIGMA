@@ -1,4 +1,4 @@
-# ```+Commandes git 
+# Commandes git 
 
 * **git pwd**  --> *obtenir le nom du répertoire courant*
 * **git cd** --> *changer de répertoire*
