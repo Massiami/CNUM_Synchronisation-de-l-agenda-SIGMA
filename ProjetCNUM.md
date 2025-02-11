@@ -17,9 +17,9 @@ Certaines sont à peu près standardisées :
 
 D'autres informations ne sont pas présentes systématiquement et pas de manière standardisées :
 
-* **horaire précis** -> dans les commentaires
-* **nom de l'intervenant·e** -> dans les commentaires
-* **salle** : -> dans les commentaires
+* **Horaire précis** -> dans les commentaires
+* **Nom de l'intervenant·e** -> dans les commentaires
+* **Salle** : -> dans les commentaires
 
 ## Livrable
 Un dépôt Git qui contient l'ensemble des développements documentés avec une notice d'utilisation.
