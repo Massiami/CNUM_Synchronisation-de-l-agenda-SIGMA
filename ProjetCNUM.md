@@ -32,14 +32,14 @@ Voici les différentes fonctionnalités qui peuvent être incrémentées :
 Il est possible que le format initial soit trop contraignant pour atteindre toutes les foncitonnalités, ou peut être pas de manière pérenne. Dans ce cas, les étudiant·es pourront suggérer des modifications du format initial pour faciliter l'automatisation de l'export. Un minimum de modifications sera apprécié par l'équipe enseignante.
 
 ## Bibliothèques à utiliser
-* Pour lire des fichiers [excel] (https://openpyxl.readthedocs.io/en/stable/)
+* Pour lire des fichiers [excel](https://openpyxl.readthedocs.io/en/stable/)
     *permet de charger/écrire, de modifier le style et les commentaires, et bien plus encore. Il faut parcourir la doc depuis le table des matières à gauche et cliquer sur Next Topic.*
     
-* Pour exporter au format [ics] (https://icspy.readthedocs.io/en/stable/)
+* Pour exporter au format [ics](https://icspy.readthedocs.io/en/stable/)
     
 * Pour exporter dans un google agenda :
-    - [Api Python de google] (https://developers.google.com/calendar/api/quickstart/python?hl=fr)
-    - [un wrapper de l'api google] (https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html.) 
+    - [Api Python de google](https://developers.google.com/calendar/api/quickstart/python?hl=fr)
+    - [un wrapper de l'api google](https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html.) 
     *Ça requiert malgré tout la configuration d'un compte google avec des identifiants pour accéder au calendrier.*
     
 *Les bibliothèques à utiliser le sont à titre informatif. Si une meilleure solution est trouvée, ainsi soit-t-il.*
