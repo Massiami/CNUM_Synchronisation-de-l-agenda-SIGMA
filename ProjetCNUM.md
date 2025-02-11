@@ -42,7 +42,7 @@ Il est possible que le format initial soit trop contraignant pour atteindre tout
     - [un wrapper de l'api google](https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html.) 
     *Ça requiert malgré tout la configuration d'un compte google avec des identifiants pour accéder au calendrier.*
     
-*Les bibliothèques à utiliser le sont à titre informatif. Si une meilleure solution est trouvée, ainsi soit-t-il.*
+*Les bibliothèques à utiliser le sont à titre informatif. Si une meilleure solution est trouvée, ainsi soit-il.*
 
 ## Détails
 
@@ -55,7 +55,7 @@ Voici un aperçu des étapes à réaliser pour faire l'extraction des informatio
 2. Déduire la date et l'horaire en fonction de la position de la cellue
 3. Obtenir le contenu
 4. Déduire le nom de l'UE.
-5. Déduire la taille du créneau horaire (2h ou 4h) en 6.fonction de sa position au sein de la cellule
+5. Déduire la taille du créneau horaire (2h ou 4h) en fonction de sa position au sein de la cellule
 7. Déduire localisation (UT2J / ENSAT) en fonction de la couleur
 8. Extraire la description (contient nom intervenant, salle et horaire précise)
 
