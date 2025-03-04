@@ -1,4 +1,6 @@
-#%% chemin d'accès LOU
+
+#VERSION 1 : RECUPERATION DU TABLEAU D'INTERET DANS UN NOUVEAU FICHIER EXCEL (AVEC LES COULEURS DONC UTILISATION DE OPENPYXL)
+
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
@@ -51,8 +53,7 @@ new_wb.save(new_file_path)
 
 print(f"Le fichier Excel modifié a été sauvegardé avec les couleurs sous : {new_file_path}")
 
-#%% chmein d'accès Massiami 
-#Gestion des cellules fusionnées
+#VERSION 2 : GESTION DES CELLULES FUSUIONNEES = DUPLICATION DES INFORMATIONS
 
 import pandas as pd
 from openpyxl import load_workbook
@@ -141,3 +142,28 @@ for merge_range in merged_cells:
 new_wb.save(new_file_path)
 
 print(f"Le fichier Excel modifié a été sauvegardé avec les couleurs et le contenu copié pour les cellules fusionnées sous : {new_file_path}")
+
+#VERSION 3 : CREATION D'UN DICTIONNAIRE CONTENANT LES COULEURS DES CELLULES ET LEURS SIGNIFICATIONS
+
+# Chemins des fichiers
+file_path = "C:/Documents/ENSAT/2A/cours S8/Projets/CNUM - Conception Numérique/test_modifie.xlsx"
+csv_file_path = "C:/Documents/ENSAT/2A/cours S8/Projets/CNUM - Conception Numérique/schedule.csv"
+sheet_name = "M1 2324_modifie"
+
+# Charger le fichier Excel avec openpyxl pour récupérer les couleurs
+wb = load_workbook(file_path)
+ws = wb[sheet_name]
+
+# Lire les données avec pandas
+df = pd.read_excel(file_path, sheet_name=sheet_name, engine="openpyxl")
+
+# Dictionnaire pour mapper les couleurs aux lieux (on a pris les codes couleurs d'EXCEL)
+color_to_location = {
+    "F8CBAD": "Salle UT2J sans ordi",  
+    "CCFFCC": "Salle ENSAT sans ordi",
+    "99CCFF" : "1003-Langue",
+    "FF9933" : "UT2J GS027"
+    "FFCC66" : "UT2J GS021"
+    "E2F0D9" : "703 ou alternance"
+    
+}
