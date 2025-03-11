@@ -167,3 +167,88 @@ color_to_location = {
     "E2F0D9" : "703 ou alternance"
     
 }
+
+#VERSION 4: FUSION DES VERSIONS 1&2 et IMPORTATIONS DES COMMENTAIRES
+
+import pandas as pd
+import openpyxl
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
+
+file_path = "C:/Users/hp/OneDrive/Documents/COURS IA/SEMESTRE 8/UE-PROJET/CNUM/test.xlsx"
+new_file_path = "C:/Users/hp/OneDrive/Documents/COURS IA/SEMESTRE 8/UE-PROJET/CNUM/test_modifie.xlsx"  # Nouveau fichier Excel
+sheet_name = "M1 2324"  # Nom de la feuille d'intérêt
+
+# Charger le fichier Excel avec openpyxl
+wb = load_workbook(file_path)
+ws = wb[sheet_name]
+
+# Récupérer les cellules fusionnées
+merged_cells = []
+for merge_range in ws.merged_cells.ranges:
+    if (merge_range.min_col >= 5 and merge_range.max_col <= 15 and 
+        merge_range.min_row >= 5 and merge_range.max_row <= 34):
+        merged_cells.append(merge_range)
+
+# Charger les données avec pandas :
+# - skiprows=4 : on ignore les 4 premières lignes
+# - usecols="E:O" : on sélectionne les colonnes E à O
+# - header=0 : la première ligne lue (originalement la ligne 5) sera l'en-tête
+df = pd.read_excel(file_path, sheet_name=sheet_name,
+                   skiprows=4, usecols="E:O", header=0, engine="openpyxl")
+df = df.iloc[:29]
+
+# Récupérer les couleurs des cellules
+cell_colors = {}
+cell_comments = {}
+for row_idx, row in enumerate(ws.iter_rows(min_row=6, max_row=34, min_col=5, max_col=15), start=0):
+    for col_idx, cell in enumerate(row, start=0):
+        if cell.fill and cell.fill.fgColor and cell.fill.fgColor.rgb and cell.fill.fgColor.rgb != "00000000":
+            cell_colors[(row_idx, col_idx)] = cell.fill.fgColor.rgb
+        if cell.comment:
+            cell_comments[(row_idx, col_idx)] = cell.comment.text
+
+# Écrire les données dans un nouveau fichier Excel
+df.to_excel(new_file_path, sheet_name="M1 2324_modifie", index=False)
+
+# Charger le nouveau fichier avec openpyxl
+new_wb = load_workbook(new_file_path)
+new_ws = new_wb["M1 2324_modifie"]
+
+# Appliquer les couleurs récupérées aux nouvelles cellules
+for row_idx in range(len(df)):
+    for col_idx in range(len(df.columns)):
+        cell = new_ws.cell(row=row_idx + 2, column=col_idx + 1)
+        if (row_idx, col_idx) in cell_colors:
+            color = cell_colors[(row_idx, col_idx)]
+            cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+        if (row_idx, col_idx) in cell_comments:
+            cell.comment = openpyxl.comments.Comment(cell_comments[(row_idx, col_idx)], "Author")
+
+# Gérer les cellules fusionnées
+for merge_range in merged_cells:
+    new_min_row = merge_range.min_row - 4
+    new_max_row = merge_range.max_row - 4
+    new_min_col = merge_range.min_col - 4
+    new_max_col = merge_range.max_col - 4
+
+    original_top_left = ws.cell(row=merge_range.min_row, column=merge_range.min_col)
+    top_left_value = original_top_left.value
+    top_left_color = None
+    top_left_comment = original_top_left.comment.text if original_top_left.comment else None
+    
+    if original_top_left.fill and original_top_left.fill.fgColor and original_top_left.fill.fgColor.rgb and original_top_left.fill.fgColor.rgb != "00000000":
+        top_left_color = original_top_left.fill.fgColor.rgb
+
+    for r in range(new_min_row, new_max_row + 1):
+        for c in range(new_min_col, new_max_col + 1):
+            new_cell = new_ws.cell(row=r, column=c)
+            new_cell.value = top_left_value
+            if top_left_color:
+                new_cell.fill = PatternFill(start_color=top_left_color, end_color=top_left_color, fill_type="solid")
+            if top_left_comment:
+                new_cell.comment = openpyxl.comments.Comment(top_left_comment, "Author")
+
+# Sauvegarder le fichier
+new_wb.save(new_file_path)
+print(f"Le fichier Excel modifié a été sauvegardé avec les couleurs, la gestion des cellules fusionnées et les commentaires sous : {new_file_path}")
