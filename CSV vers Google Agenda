@@ -1,0 +1,79 @@
+import os
+import pandas as pd
+from datetime import datetime
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+# Autorisations Google Calendar
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+
+# Fonction pour s'authentifier avec Google Calendar
+def authenticate_google():
+    creds = None
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            creds = flow.run_local_server(port=0)
+        
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+    
+    return build("calendar", "v3", credentials=creds)
+
+#  Convertir date + heure en objet datetime
+def convert_to_datetime(date_str, time_str):
+    """Convertit une date et une heure en format datetime."""
+    datetime_str = f"{date_str} {time_str}"
+    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")  # ⚠️ Vérifie que le format correspond
+
+# ️ Création d'un événement
+def create_event(service, subject, date, start_time, end_time, location, description):
+    """Crée un événement et l'ajoute à Google Calendar."""
+    
+    #  Convertir les dates et heures
+    start_datetime = convert_to_datetime(date, start_time)
+    end_datetime = convert_to_datetime(date, end_time)
+    
+    #  Debugging
+    print("Start:", start_datetime, "| End:", end_datetime)  
+
+    event = {
+        'summary': subject,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start_datetime.isoformat(),  #  Conversion en format ISO
+            'timeZone': 'Europe/Paris',
+        },
+        'end': {
+            'dateTime': end_datetime.isoformat(),  #  Conversion en format ISO
+            'timeZone': 'Europe/Paris',
+        }
+    }
+
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print(f" Événement ajouté : {event.get('htmlLink')}")
+
+#  Lire le fichier CSV et ajouter les événements
+def main():
+    service = authenticate_google()
+    
+    #  Charger le fichier CSV
+    file_path = "C:/Users/loure/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/output.csv"  
+    df = pd.read_csv(file_path)
+
+    #  Boucle sur chaque ligne du CSV
+    for _, row in df.iterrows():
+        create_event(service, row['Subject'], row['Date'], row['Start Time'], row['End Time'], row['Location'], row['Description'])
+
+#  Lancer le script
+if __name__ == "__main__":
+    main()
+
