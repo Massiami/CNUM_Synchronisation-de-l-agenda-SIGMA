@@ -10,4 +10,5 @@
 * **git push origin main** --> *envoyer version sur Github*
 * **git pull** --> *récupérer dernière version sur Github*
 * **git blame** --> *consulter l'historique des modifications*
-  :wq  --> sauvegarder et quitter l'éditeur
+* **git stash** --> *permet de mettre de côté temporairement tes modifications locales sans les committer*
+* **:wq**  --> *sauvegarder et quitter l'éditeur*
