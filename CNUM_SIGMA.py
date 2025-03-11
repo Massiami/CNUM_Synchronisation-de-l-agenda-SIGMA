@@ -137,16 +137,8 @@ import os
 # Paramètres : chemins et dictionnaires
 # ---------------------------------------------------------------------------
 
-# Emplacement du fichier Excel
 excel_file = r"C:/Users/hp/OneDrive/Documents/COURS IA/SEMESTRE 8/UE-PROJET/CNUM/test_modifie.xlsx"
-
-# Sortie CSV dans le même dossier
 output_file = os.path.join(os.path.dirname(excel_file), "output.csv")
-with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
-    writer = csv.writer(csvfile, delimiter=';')
-    
-    # Entête
-    writer.writerow(["Subject", "Date", "Start Time", "End Time", "Location", "Description"])
 
 # Dictionnaire des horaires (clé = intitulé exact de la colonne, ex : "Lu Matin")
 horaires = {
@@ -162,6 +154,20 @@ horaires = {
     "Ve Aprem": ("13:30", "17:30"),
 }
 
+# Dictionnaire des points de séparation (mid-times) pour scinder un créneau en deux
+mid_times = {
+    "Lu Matin": "10:30",
+    "Lu Aprem": "15:30",
+    "Ma Matin": "10:00",
+    "Ma Aprem": "15:30",
+    "Me Matin": "10:30",
+    "Me Aprem": "15:30",
+    "Je Matin": "10:30",
+    "Je Aprem": "15:30",
+    "Ve Matin": "10:30",
+    "Ve Aprem": "15:30",
+}
+
 # Dictionnaire de correspondance couleurs -> lieux
 color_to_location = {
     "F8CBAD": "Salle UT2J sans ordi",
@@ -172,7 +178,7 @@ color_to_location = {
     "E2F0D9": "703 (projet) ou alternance (entreprise)"
 }
 
-# Dictionnaire pour convertir un libellé de mois en nombre
+# Pour convertir un libellé de mois en nombre
 months_fr = {
     "jan": 1, "janv": 1, "janv.": 1, "févr": 2, "fev": 2, "fev.": 2, "févr.": 2,
     "mars": 3, "mars.": 3, "avr": 4, "avr.": 4, "avril": 4,
@@ -195,7 +201,45 @@ day_offsets = {
 }
 
 # ---------------------------------------------------------------------------
-# Chargement du fichier Excel
+# Fonction pour scinder le contenu d'une cellule si elle contient "/"
+# et générer 1 ou 2 événements selon les cas
+# ---------------------------------------------------------------------------
+def split_subject_into_events(subject, date_str, halfday_label, location, description):
+    """Retourne une liste d'événements [Subject, Date, Start, End, Location, Description]."""
+    events = []
+    # Récupération des horaires standard (matin ou aprem)
+    start_time, end_time = horaires.get(halfday_label, ("", ""))
+    # Récupération de l'horaire intermédiaire (pour scinder le créneau en deux)
+    mid_time = mid_times.get(halfday_label, "")
+
+    if "/" in subject:
+        parts = [p.strip() for p in subject.split("/")]
+        # Si on a exactement 2 parties, on crée deux événements
+        if len(parts) == 2:
+            first_part, second_part = parts
+            # Si la première partie est "X" ou "---", on saute le premier créneau
+            if first_part in ["---", "X"]:
+                # On ne crée que l'événement 2, de mid_time à end_time
+                if second_part not in ["---", "X"]:
+                    events.append([second_part, date_str, mid_time, end_time, location, description])
+            else:
+                # On crée 2 événements : 
+                # 1) de start_time à mid_time
+                # 2) de mid_time à end_time
+                events.append([first_part, date_str, start_time, mid_time, location, description])
+                if second_part not in ["---", "X"]:
+                    events.append([second_part, date_str, mid_time, end_time, location, description])
+        else:
+            # Si plus de 2 parties, ou 1 seule, on ne fait pas de découpe
+            events.append([subject, date_str, start_time, end_time, location, description])
+    else:
+        # Pas de "/", un seul événement
+        events.append([subject, date_str, start_time, end_time, location, description])
+
+    return events
+
+# ---------------------------------------------------------------------------
+# Lecture du fichier Excel
 # ---------------------------------------------------------------------------
 try:
     wb = openpyxl.load_workbook(excel_file, data_only=True)
@@ -204,24 +248,20 @@ except Exception as e:
     print(f"Erreur : impossible d'ouvrir '{excel_file}'\n{e}")
     exit(1)
 
-# ---------------------------------------------------------------------------
 # Lecture de l'entête (ligne 1)
-#    - Col. A = "date" ou quelque chose de similaire
-#    - Colonnes B.. = "Lu Matin", "Lu Aprem", "Ma Matin", ...
-# ---------------------------------------------------------------------------
 headers = [cell.value for cell in ws[1] if cell.value is not None]
 if len(headers) < 2:
     print("En-têtes insuffisantes dans la première ligne du fichier Excel.")
     exit(1)
 
-# Les colonnes B, C, ... correspondent aux demi-journées
+# Les colonnes B.. = "Lu Matin", "Lu Aprem", ...
 halfday_headers = headers[1:]  # on enlève la 1re colonne (date)
 
 # ---------------------------------------------------------------------------
-# Ouverture du fichier CSV en écriture
+# Ouverture du fichier CSV en écriture (une seule fois)
 # ---------------------------------------------------------------------------
 with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
-    writer = csv.writer(csvfile)
+    writer = csv.writer(csvfile, delimiter=';')
     # Écriture de la ligne d'en-tête
     writer.writerow(["Subject", "Date", "Start Time", "End Time", "Location", "Description"])
 
@@ -237,25 +277,21 @@ with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
 
         week_info = str(week_cell.value).strip().lower()
         # On cherche un motif du type "11-15 sept 23" ou "18-22 sept. 2023"
-        # Regex : (\d+)\s*-\s*(\d+) -> jour début-fin
-        #         ([a-zA-Zéû\.]+)   -> mois
-        #         (\d+)             -> année
         match = re.search(r"(\d+)\s*-\s*(\d+)\s+([a-zA-Zéû\.]+)\s+(\d+)", week_info)
         if not match:
-            # Format non reconnu
-            print(f"Ligne {row_idx}: format de date non reconnu dans '{week_info}'")
+            # Format non reconnu -> on ignore la ligne
             continue
 
         try:
-            day_start = int(match.group(1))         # ex: 11
-            # day_end = int(match.group(2))         # ex: 15 (inutile dans le code actuel)
-            month_str = match.group(3).replace('.', '')  # ex: sept
-            year_str = match.group(4)                    # ex: 23
+            day_start = int(match.group(1))
+            # day_end = int(match.group(2))  # non utilisé directement
+            month_str = match.group(3).replace('.', '')  # ex: "sept"
+            year_str = match.group(4)                    # ex: "23"
             month = months_fr.get(month_str, None)
             if not month:
-                print(f"Ligne {row_idx}: mois inconnu : {month_str}")
                 continue
-            # Convertit l'année (si c'est "23", on en fait 2023 ; sinon 2025, etc.)
+
+            # Conversion année sur 2 chiffres => 20xx
             if len(year_str) == 2:
                 year = 2000 + int(year_str)
             else:
@@ -263,14 +299,13 @@ with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
 
             # On considère day_start comme le lundi de la semaine
             monday_date = datetime(year, month, day_start)
-        except Exception as e:
-            print(f"Ligne {row_idx}: impossible de parser la date -> {e}")
+        except Exception:
+            # Problème de parsing, on saute
             continue
 
         # -------------------------------------------------------------------
         # Parcours des colonnes B.. (les demi-journées)
         # -------------------------------------------------------------------
-        # row[1:] = colonnes B.. de la ligne
         for col_index, cell in enumerate(row[1:], start=1):
             # Le label de demi-journée (ex : "Lu Matin", "Ma Aprem", etc.)
             if col_index - 1 < len(halfday_headers):
@@ -279,7 +314,7 @@ with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
                 continue
 
             # Si la cellule est vide ET sans commentaire, on ignore
-            if cell.value is None and cell.comment is None:
+            if (cell.value is None) and (cell.comment is None):
                 continue
 
             # Jour "Lu", "Ma", ...
@@ -299,13 +334,7 @@ with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
             # Description = commentaire (s'il existe)
             description = cell.comment.text.strip() if cell.comment else ""
 
-            # Start Time / End Time via le dictionnaire horaires
-            if halfday_label in horaires:
-                start_time, end_time = horaires[halfday_label]
-            else:
-                start_time, end_time = ("", "")
-
-            # Location = déterminée via la couleur de fond
+            # Récupération de la couleur pour la salle
             location = ""
             if cell.fill and cell.fill.fgColor and cell.fill.fgColor.rgb:
                 rgb = cell.fill.fgColor.rgb  # ex: "FFE2F0D9"
@@ -315,8 +344,17 @@ with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
                     color_code = rgb
                 location = color_to_location.get(color_code, "")
 
-            # Écriture dans le CSV
-            writer.writerow([subject, date_str, start_time, end_time, location, description])
+            # On scinde éventuellement le sujet s'il contient un "/"
+            events_to_write = split_subject_into_events(
+                subject=subject,
+                date_str=date_str,
+                halfday_label=halfday_label,
+                location=location,
+                description=description
+            )
 
-print(f"Fichier CSV généré : {output_file}")
+            # Écriture dans le CSV de chaque "sous-événement"
+            for ev in events_to_write:
+                writer.writerow(ev)
 
+print(f"✅ Fichier CSV généré : {output_file}")
