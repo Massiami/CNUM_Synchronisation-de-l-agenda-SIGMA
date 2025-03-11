@@ -1,1 +1,271 @@
-Subject,Date,Start Time,End Time,Location,Description
+Subject;Date;Start Time;End Time;Location;Description
+-;2023-09-04;08:30;12:30;;
+-;2023-09-04;13:30;17:30;;
+-;2023-09-05;08:00;12:00;;
+-;2023-09-05;13:30;16:00;;
+-;2023-09-06;08:30;12:30;;
+-;2023-09-06;13:30;17:30;;
+-;2023-09-07;08:30;12:30;;
+-;2023-09-07;13:30;17:30;;
+-;2023-09-08;08:30;12:30;;
+-;2023-09-08;13:30;17:30;;
+-;2023-09-11;08:30;12:30;;
+-;2023-09-11;13:30;17:30;;
+-;2023-09-12;08:00;12:00;;
+-;2023-09-12;13:30;16:00;;
+-;2023-09-13;08:30;12:30;;
+-;2023-09-13;13:30;17:30;;
+-;2023-09-14;08:30;12:30;;
+-;2023-09-14;13:30;17:30;;
+-;2023-09-15;08:30;12:30;;
+-;2023-09-15;13:30;17:30;;
+Rentrée;2023-09-18;08:30;10:30;Salle UT2J sans ordi;"Réunion de rentrée à 9h
+UE704 : 10h50-12h50
+salle GS 139"
+704;2023-09-18;10:30;12:30;Salle UT2J sans ordi;"Réunion de rentrée à 9h
+UE704 : 10h50-12h50
+salle GS 139"
+705;2023-09-19;08:00;12:00;UT2J GS027;"Nicolas Maestripieri 
+8h30-12h30"
+701_11;2023-09-19;13:30;16:00;UT2J GS021;"Nicolas Lagarrigue
+9h-12h"
+701_11;2023-09-20;08:30;12:30;UT2J GS027;"Nicolas Lagarrigue
+9h-12h"
+701_11;2023-09-20;13:30;17:30;UT2J GS027;"Nicolas Lagarrigue
+13h-17
+h"
+inscr.INP;2023-09-21;08:30;10:30;1003-Langue;"8h-10h : inscription en scola ENSAT pour les inscrits INP à titre principal
+10h30-12h30 : Anglais"
+701_2;2023-09-21;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+701_4 Sortie terrain;2023-09-22;08:30;12:30;;
+701_4 Sortie terrain;2023-09-22;13:30;17:30;;
+704;2023-09-25;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+706;2023-09-25;13:30;15:30;1003-Langue;"706 : P. Lake / A. Alibert (2h)
+
+14h-16h"
+701_12;2023-09-26;13:30;16:00;UT2J GS021;7x4h
+701_32;2023-09-27;08:30;12:30;UT2J GS027;4x4
+803;2023-09-27;13:30;17:30;UT2J GS027;13h-17h
+701_2;2023-09-28;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+702_1;2023-09-29;08:30;12:30;1003-Langue;"8h30-12h30
+Hanan Jemmal"
+702_1;2023-09-29;13:30;17:30;1003-Langue;
+704;2023-10-02;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+701_12;2023-10-03;13:30;16:00;UT2J GS021;"Sebastien LE-CORRE:
+Séance Mathilde Joncheray"
+701_32;2023-10-04;08:30;12:30;UT2J GS027;
+705;2023-10-04;13:30;17:30;UT2J GS027;"13h30-17h30
+Arnaud Mansat"
+701_2;2023-10-05;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+702_1;2023-10-06;08:30;12:30;1003-Langue;8h-12h
+702_2;2023-10-06;13:30;17:30;1003-Langue;
+704;2023-10-09;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+701_12;2023-10-10;13:30;16:00;UT2J GS021;"Sebastien LE-CORRE:
+Séance Mathilde Joncheray"
+701_32;2023-10-11;08:30;12:30;UT2J GS027;
+803;2023-10-11;13:30;17:30;UT2J GS027;13h-17h
+701_2;2023-10-12;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+702_1 – Eval;2023-10-13;08:30;12:30;1003-Langue;8h-12h
+702_2;2023-10-13;13:30;17:30;1003-Langue;
+704;2023-10-16;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+701_12;2023-10-17;08:00;12:00;UT2J GS027;"Nicolas Lagarrigue
+9h-12h30"
+701_12;2023-10-17;13:30;16:00;UT2J GS021;"Nicolas Lagarrigue
+13h30-17h30"
+701_32;2023-10-18;08:30;12:30;UT2J GS027;
+705;2023-10-18;13:30;15:30;UT2J GS027;"13h30-15h30 Arnaud mansat
+15h30-16h60 Réunion 703"
+R 703;2023-10-18;15:30;17:30;UT2J GS027;"13h30-15h30 Arnaud mansat
+15h30-16h60 Réunion 703"
+705;2023-10-19;08:30;10:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+706;2023-10-19;10:30;12:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+701_2;2023-10-19;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+706;2023-10-20;08:30;10:30;1003-Langue;706 : P. Lake 8h-10h (2h)
+702_2;2023-10-20;10:30;12:30;1003-Langue;706 : P. Lake 8h-10h (2h)
+702_2;2023-10-20;13:30;17:30;1003-Langue;
+703 (projet) ou alternance (entreprise);2023-11-30;13:30;17:30;703 (projet) ou alternance (entreprise);
+férie;2023-12-02;08:30;12:30;;
+férié;2023-12-02;13:30;17:30;;
+-;2023-12-03;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2023-12-03;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2023-12-04;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2023-12-04;13:30;17:30;703 (projet) ou alternance (entreprise);
+704;2023-11-13;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+706;2023-11-13;13:30;15:30;1003-Langue;"706 : P. Lake / A. Alibert (2h)
+
+14h-16h"
+701_12;2023-11-14;08:00;12:00;UT2J GS027;
+701_31;2023-11-15;08:30;12:30;UT2J GS027;Séances 3h
+705;2023-11-15;13:30;17:30;UT2J GS027;"13h30-17
+h30 
+Aranud Mansat"
+706;2023-11-16;10:30;12:30;1003-Langue;706 : P. Lake / A. Alibert (2h)
+701_2;2023-11-16;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+802_11;2023-11-17;08:30;12:30;1003-Langue;4h
+702_2;2023-11-17;13:30;17:30;1003-Langue;
+704;2023-11-20;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+701_12 exam;2023-11-21;08:00;12:00;UT2J GS027;8h-11h
+701_31;2023-11-21;13:30;16:00;UT2J GS021;
+701_31;2023-11-22;08:30;12:30;UT2J GS027;
+705;2023-11-22;13:30;15:30;UT2J GS027;"Arnaud Mansat
+13h30-15h30
+Réunion bilan 15h45_16h45"
+R bilan;2023-11-22;15:30;17:30;UT2J GS027;"Arnaud Mansat
+13h30-15h30
+Réunion bilan 15h45_16h45"
+705;2023-11-23;08:30;10:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+706;2023-11-23;10:30;12:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+Forum-Carrière;2023-11-23;13:30;17:30;Salle ENSAT sans ordi;
+802_11;2023-11-24;08:30;12:30;1003-Langue;4h
+701_2;2023-11-24;13:30;17:30;Salle ENSAT sans ordi;"3h
+présentiel+Universeh"
+704;2023-12-27;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+701_4;2023-12-28;08:00;12:00;UT2J GS027;
+701_4;2023-12-28;13:30;16:00;UT2J GS021;
+701_4;2023-12-29;08:30;12:30;UT2J GS027;
+701_4;2023-12-29;13:30;17:30;UT2J GS027;
+705;2023-12-30;08:30;10:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+706;2023-12-30;10:30;12:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+701_2;2023-12-30;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+802_11;2023-12-31;08:30;12:30;1003-Langue;4h
+702_3;2023-12-31;13:30;17:30;1003-Langue;Séances 3h – intervenant à fixer
+704;2023-12-04;10:30;12:30;Salle UT2J sans ordi;"UE704 : 10h50-12h50
+salle GS 139"
+705;2023-12-05;08:00;12:00;UT2J GS027;"Nicolas Lagarrigue
+9h-12h"
+803;2023-12-06;08:30;12:30;UT2J GS027;8h30-12h30
+803;2023-12-06;13:30;17:30;UT2J GS027;14h-16h30
+705;2023-12-07;08:30;10:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+706;2023-12-07;10:30;12:30;1003-Langue;"705 : A. Alibert (2h)
+706 : P. Lake (2h)"
+701_2;2023-12-07;13:30;17:30;1003-Langue;"3h
+présentiel+Universeh"
+702_3;2023-12-08;13:30;17:30;1003-Langue;"Séances 3h (Wilfried HEINTZ)
+- confirmé !"
+703 (projet) ou alternance (entreprise);2023-12-18;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2023-12-25;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2023-12-25;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2023-12-26;08:00;12:00;703 (projet) ou alternance (entreprise);
+-;2023-12-26;13:30;16:00;703 (projet) ou alternance (entreprise);
+-;2023-12-27;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2023-12-27;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2023-12-28;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2023-12-28;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2023-12-29;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2023-12-29;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2024-01-01;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2024-01-01;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2024-01-02;08:00;12:00;703 (projet) ou alternance (entreprise);
+-;2024-01-02;13:30;16:00;703 (projet) ou alternance (entreprise);
+-;2024-01-03;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2024-01-03;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2024-01-04;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2024-01-04;13:30;17:30;703 (projet) ou alternance (entreprise);
+-;2024-01-05;08:30;12:30;703 (projet) ou alternance (entreprise);
+-;2024-01-05;13:30;17:30;703 (projet) ou alternance (entreprise);
+(séance 20 minutes de coaching par étudiant pour UE 706 – à planifier en semaine 2 avec enseignants);2024-01-10;13:30;17:30;703 (projet) ou alternance (entreprise);
+802_22;2024-01-15;08:30;12:30;UT2J GS027;
+802_12;2024-01-15;13:30;17:30;UT2J GS027;"Nicolas Lagarrigue
+13h30-17h30"
+705 Eval;2024-01-16;08:00;10:00;1003-Langue;"Arnaud Mansat et A. Alibert
+2 à 3h + enseignants SIGMA et comm ENSAT"
+802_21;2024-01-16;13:30;16:00;UT2J GS027;4 séances de 3h + 2 de 3.5 h
+802_11;2024-01-17;08:30;12:30;1003-Langue;4h
+804;2024-01-17;13:30;17:30;1003-Langue;"D. Birre 3h
+13h30-16h30"
+805;2024-01-18;08:30;12:30;Salle UT2J sans ordi;"Toutes les séance en Amphi 4 OdG (Dpt. de Géo)
+8h20- 10h20 puis
+10h50-12h50"
+803;2024-01-18;13:30;17:30;UT2J GS027;Séance 1/2 A. Doury: OSM
+706;2024-01-19;08:30;12:30;1003-Langue;"David:
+journée évaluation 2 x 3h"
+706;2024-01-19;13:30;17:30;1003-Langue;"David:
+journée évaluation 2 x 3h"
+802_22;2024-01-22;08:30;12:30;UT2J GS027;
+802_12;2024-01-22;13:30;17:30;UT2J GS027;"Nicolas Lagarrigue
+13h30-17h30"
+802_21;2024-01-23;13:30;16:00;UT2J GS027;
+802_11;2024-01-24;08:30;12:30;1003-Langue;4h
+804;2024-01-24;13:30;17:30;1003-Langue;"D. Birre 3h
+13h30-16h30"
+805;2024-01-25;08:30;12:30;Salle UT2J sans ordi;"A partir de cette date: Amhi 1 ODG
+
+8h20- 10h20 puis
+10h50-12h50"
+803;2024-01-25;13:30;17:30;UT2J GS027;Séance 1/2 A. Doury: OSM
+802_22;2024-02-29;08:30;12:30;UT2J GS027;
+802_12;2024-02-29;13:30;17:30;UT2J GS027;"Nicolas Lagarrigue
+13h30-17h30"
+804;2024-03-01;08:00;12:00;UT2J GS027;
+802_21;2024-03-01;13:30;16:00;UT2J GS027;
+802_11;2024-03-02;08:30;12:30;1003-Langue;4h
+804;2024-03-02;13:30;17:30;1003-Langue;"D. Birre 3h
+13h30-16h30"
+805;2024-03-03;08:30;12:30;Salle UT2J sans ordi;"8h20- 10h20 puis
+10h50-12h50"
+804;2024-03-03;13:30;17:30;UT2J GS027;4 séances de 3h
+802_22;2024-02-05;08:30;12:30;UT2J GS027;
+802_12;2024-02-05;13:30;17:30;UT2J GS027;"Nicolas Lagarrigue
+13h30-17h30"
+804;2024-02-06;08:00;12:00;UT2J GS027;
+802_21A;2024-02-06;13:30;16:00;UT2J GS027;
+802_11;2024-02-07;08:30;12:30;1003-Langue;4h
+804;2024-02-07;13:30;17:30;1003-Langue;"D. Birre 3h
+13h30-16h30"
+805;2024-02-08;08:30;12:30;Salle UT2J sans ordi;"8h20- 10h20 puis
+10h50-12h50"
+804;2024-02-08;13:30;17:30;UT2J GS027;
+802_22;2024-02-12;08:30;12:30;UT2J GS027;V. Thierion 3h
+802_12;2024-02-12;13:30;17:30;UT2J GS027;"Nicolas Lagarrigue
+13h30-17h30"
+806;2024-02-13;08:00;12:00;UT2J GS027;6 séances de 4h regroupées à la fin du semestre
+802_21;2024-02-13;13:30;16:00;UT2J GS027;
+802_11;2024-02-14;08:30;12:30;1003-Langue;3h
+802_12;2024-02-14;13:30;17:30;1003-Langue;"Nicolas Lagarrigue
+13h30-16h30 (3h)"
+805;2024-02-15;08:30;12:30;Salle UT2J sans ordi;"8h20- 10h20 puis
+10h50-12h50"
+802_23;2024-02-19;08:30;12:30;1003-Langue;
+802_23;2024-02-19;13:30;17:30;1003-Langue;
+802_23;2024-02-20;08:00;12:00;1003-Langue;
+802_23;2024-02-20;13:30;16:00;1003-Langue;
+802_23;2024-02-21;08:30;12:30;1003-Langue;
+802_23;2024-02-21;13:30;17:30;1003-Langue;
+805;2024-02-22;08:30;12:30;Salle UT2J sans ordi;"8h20 - 10h20 
+10h50-12h50"
+806;2024-03-26;08:30;12:30;UT2J GS027;
+806;2024-03-26;13:30;17:30;UT2J GS027;
+802_12A;2024-03-27;08:00;12:00;UT2J GS027;"EN AUTONOMIE
+Nicolas Lagarrigue
+8h30-12h"
+802_21;2024-03-27;13:30;16:00;UT2J GS027;
+802_11;2024-03-28;08:30;12:30;1003-Langue;3h
+805;2024-03-29;08:30;12:30;Salle UT2J sans ordi;"8h20 - 10h20
+10h50-12h50"
+806;2024-03-04;08:30;12:30;UT2J GS027;
+806;2024-03-04;13:30;17:30;UT2J GS027;
+806;2024-03-05;08:00;12:00;UT2J GS027;
+Réunion bilan;2024-03-05;13:30;16:00;UT2J GS027;
+802_11 exam;2024-03-06;08:30;12:30;1003-Langue;3h
+805;2024-03-07;08:30;12:30;Salle UT2J sans ordi;8h20: Examen
