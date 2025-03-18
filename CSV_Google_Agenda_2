@@ -55,6 +55,17 @@ def fetch_existing_events(service):
 
 def sync_events(service, df):
     """Optimise la mise à jour et création d'événements en limitant les requêtes."""
+    room_colors = { #associer des couleurs aux salles dans google calendar 
+        "Salle UT2J sans ordi": 1,  # Couleur rouge
+        "UT2J GS027": 2,  # Couleur bleue
+        "UT2J GS021": 3,  # Couleur verte
+        "1003-Langue": 4,  # Couleur jaune
+        "Salle ENSAT sans ordi" : 5,
+        "703 (projet) ou alternance (entreprise)" : 6,
+        "UT2J GS028" : 7,
+    }
+
+    
     existing_events = fetch_existing_events(service)  # Récupération en une seule requête
     events_to_create = []
     events_to_update = []
@@ -67,13 +78,18 @@ def sync_events(service, df):
         start_datetime = convert_to_datetime(row['Date'], row['Start Time'])
         end_datetime = convert_to_datetime(row['Date'], row['End Time'])
 
+        # Récupère la couleur associée à la salle, ou utilise une couleur par défaut
+        location = row['Location']
+        color_id = room_colors.get(location, 5)  # Par défaut, utilise la couleur 5 si la salle n'est pas dans le dictionnaire
+
         event_body = {
             'summary': row['Subject'],
-            'location': row['Location'],
+            'location': location,
             'description': row['Description'],
             'start': {'dateTime': start_datetime.isoformat(), 'timeZone': 'Europe/Paris'},
             'end': {'dateTime': end_datetime.isoformat(), 'timeZone': 'Europe/Paris'},
-            'extendedProperties': {'private': {'csv_id': csv_id}}
+            'extendedProperties': {'private': {'csv_id': csv_id}},
+            'colorId': color_id  # Ajoute l'identifiant de couleur
         }
 
         if csv_id in existing_events:
@@ -81,7 +97,7 @@ def sync_events(service, df):
             differences = []
             if existing_event.get('summary', '') != row['Subject']:
                 differences.append('summary')
-            if existing_event.get('location', '') != row['Location']:
+            if existing_event.get('location', '') != location:
                 differences.append('location')
             if existing_event.get('description', '') != row['Description']:
                 differences.append('description')
@@ -126,4 +142,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
