@@ -1,0 +1,19 @@
+# Ce fichier vous permet de renseigner vos chemins d'accès des différents fichiers nécessaires à l'exécution du script. 
+#Attention : tous ces documents doivent être DANS LE MEME DOSSIER.
+#Assurez vous de changer les antislash en slash 
+
+#Fichier Excel d'origine, sur lequel vous faites les modifications 
+excel_file_path = C:/Users/loure/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/test.xlsx
+
+#Feuille sur laquelle vous avez fait les modifications (ex : M1 2324)
+sheet_name = M1 2324
+
+#fichier output_csv (par défaut dans le même dossier)
+output_csv = C:/Users/loure/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/output.csv
+
+#jeton que vous devez télécharger sur GitHub (token.json)
+token_path = C:/Users/loure/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/token.json
+
+#credentials que vous devez télécharger sur GitHub (credentials.json)
+credentials_path = C:/Users/loure/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/credentials.json
+
