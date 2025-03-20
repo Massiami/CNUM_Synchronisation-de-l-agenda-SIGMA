@@ -326,6 +326,91 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
             events_to_write = split_subject_into_events(subject, date_str, halfday_label, location, description)
             for ev in events_to_write:
                 writer.writerow(ev)
+                
+            # --------------------------------------------------------------------------------
+            # AMÉLIORATION : Gérer les semaines qui chevauchent deux mois (ex : "30-03 nov 23")
+            # --------------------------------------------------------------------------------
+            week_info = str(week_cell.value).strip().lower()
+            # Regex pour capturer day_start, day_end, month_str, year_str
+            match = re.search(r"(\d+)\s*-\s*(\d+)\s+([a-zA-Zéû\.]+)\s+(\d+)", week_info)
+            if not match:
+                # Pas de correspondance, on ignore la ligne
+                continue
+
+            try:
+                day_start = int(match.group(1))
+                day_end = int(match.group(2))
+                month_str = match.group(3).replace('.', '')
+                year_str = match.group(4)
+
+                # Conversion mois/année
+                month = months_fr.get(month_str, None)
+                if not month:
+                    continue
+
+                if len(year_str) == 2:
+                    year = 2000 + int(year_str)
+                else:
+                    year = int(year_str)
+
+                # Si day_end < day_start => on suppose que day_start est le mois précédent
+                # Exemple : "30-03 nov 23" => 30 (oct), 3 (nov)
+                if day_end < day_start:
+                    new_month = month - 1
+                    new_year = year
+                    if new_month < 1:      # Si on est avant janvier => année précédente
+                        new_month = 12
+                        new_year -= 1
+
+                    # day_start est dans le "nouveau" mois
+                    monday_date = datetime(new_year, new_month, day_start)
+                else:
+                    # Sinon, c'est le même mois
+                    monday_date = datetime(year, month, day_start)
+
+            except Exception as e:
+                print(f"Erreur de parsing sur '{week_info}' : {e}")
+                continue
+
+            # Parcours des colonnes B.. (les demi-journées)
+            for col_index, cell in enumerate(row[1:], start=1):
+                if col_index - 1 < len(halfday_headers):
+                    halfday_label = halfday_headers[col_index - 1]
+                else:
+                    continue
+
+                # Si la cellule est vide et sans commentaire, on ignore
+                if (cell.value is None) and (cell.comment is None):
+                    continue
+
+                # Détermination du jour "Lu", "Ma", "Me", ...
+                day_abbr = halfday_label.split()[0]
+                offset = day_offsets.get(day_abbr, None)
+                if offset is None:
+                    continue
+
+                # Calcul de la date effective de l'événement
+                event_date = monday_date + timedelta(days=offset)
+                date_str = event_date.strftime("%Y-%m-%d")
+
+                # Récupération du contenu
+                subject = str(cell.value).strip() if cell.value else ""
+                description = cell.comment.text.strip() if cell.comment else ""
+
+                # Récupération de la couleur pour la salle
+                location = ""
+                if cell.fill and cell.fill.fgColor and cell.fill.fgColor.rgb:
+                    rgb = cell.fill.fgColor.rgb
+                    if rgb.startswith("FF") and len(rgb) == 8:
+                        color_code = rgb[2:]
+                    else:
+                        color_code = rgb
+                    location = color_to_location.get(color_code, "")
+
+                # Scinder la cellule si elle contient "/"
+                events_to_write = split_subject_into_events(subject, date_str, halfday_label, location, description)
+                for ev in events_to_write:
+                    writer.writerow(ev)    
 
 print(f"✅ Fichier CSV généré : {output_csv}")
 
