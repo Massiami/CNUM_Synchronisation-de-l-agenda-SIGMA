@@ -270,19 +270,39 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
 
         try:
             day_start = int(match.group(1))
+            day_end = int(match.group(2))
             month_str = match.group(3).replace('.', '')
             year_str = match.group(4)
+
+            # Conversion mois/année
             month = months_fr.get(month_str, None)
             if not month:
                 continue
+
             if len(year_str) == 2:
                 year = 2000 + int(year_str)
             else:
                 year = int(year_str)
-            # On considère day_start comme le lundi de la semaine
-            monday_date = datetime(year, month, day_start)
-        except Exception:
+
+            # Si day_end < day_start => on suppose que day_start est le mois précédent
+            # Exemple : "30-03 nov 23" => 30 (oct), 3 (nov)
+            if day_end < day_start:
+                new_month = month - 1
+                new_year = year
+                if new_month < 1:  # Si on est avant janvier => année précédente
+                    new_month = 12
+                    new_year -= 1
+
+                # day_start est dans le "nouveau" mois
+                monday_date = datetime(new_year, new_month, day_start)
+            else:
+                # Sinon, c'est le même mois
+                monday_date = datetime(year, month, day_start)
+
+        except Exception as e:
+            print(f"Erreur de parsing sur '{week_info}' : {e}")
             continue
+
 
         # Parcours des colonnes B.. (les demi-journées)
         for col_index, cell in enumerate(row[1:], start=1):
