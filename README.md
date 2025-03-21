@@ -14,9 +14,9 @@ Les cours de ce master ont lieu à deux endroits différents : l’ENSAT et l’
 Cependant, les étudiants doivent systématiquement télécharger en ligne la dernière version du fichier Excel pour consulter leur emploi du temps, ce qui n’est pas optimal. 
 
 ### Objectifs du projet :
-Permettre aux étudiants d’avoir accès à un agenda en ligne contenant toutes les informations initialement présentes dans l’Excel. 
-Ne pas changer les habitudes des professeurs qui utilisent cet agenda Excel depuis de nombreuses années. 
-Pour cela : Automatiser le formatage du calendrier de cours du master SIGMA du format Excel vers un format csv pour ensuite le publier en ligne sous forme d’un Google Agenda. 
+* Permettre aux étudiants d’avoir accès à un agenda en ligne contenant toutes les informations initialement présentes dans l’Excel. 
+* Ne pas changer les habitudes des professeurs qui utilisent cet agenda Excel depuis de nombreuses années. 
+* Pour cela : Automatiser le formatage du calendrier de cours du master SIGMA du format Excel vers un format csv pour ensuite le publier en ligne sous forme d’un Google Agenda. 
 
 ### Résultat :
 Nous sommes parvenus à générer un code Python qui permet de passer du fichier Excel de base à un Google Agenda. Nous y récupérons toutes les informations à savoir : la salle du cours, l’UE concernée, le jour et l’horaire standard, les informations des commentaires (nom du professeur intervenant et horaires précis). 
@@ -33,14 +33,14 @@ Dans ce dépôt GitHub, vous trouverez différents fichiers. Afin que le program
    - `CNUM_SIGMA.py`
 3. Remplir le fichier `config.txt` qui contiendra les chemins d’accès à ces documents. Tout est indiqué dans ce fichier afin de vous aider à le remplir correctement. 
 4. Ouvrir la console du système de votre ordinateur ou anaconda prompt si vous avez Spider. Puis copier-coller ceci : 
-   - pip install google-api-python-client
-   - pip install google-auth-oauthlib
+   - **pip install google-api-python-client**
+   - **pip install google-auth-oauthlib**
 5. Assurez-vous d’avoir l’identifiant et le mot de passe de l’adresse mail du master SIGMA. 
 6. Sur le calendrier Excel de base, s’assurer que : 
-- La colonne date est bien la colonne E
-- La colonne Vendredi après-midi est bien la colonne O
-- La ligne avec “Lu Matin”, “..., “Ve Aprem” est bien la ligne 5
-- La ligne correspondant à la semaine 11 est la ligne 33
+- La colonne date est bien la **colonne E**
+- La colonne Vendredi après-midi est bien la **colonne O**
+- La ligne avec “Lu Matin”, “..., “Ve Aprem” est bien la **ligne 5**
+- La ligne correspondant à la semaine 11 est la **ligne 33**
 
 Normalement, aucun changement à faire, ce sont les paramètres par défaut de votre classeur Excel.
 
@@ -50,7 +50,8 @@ Normalement, aucun changement à faire, ce sont les paramètres par défaut de v
 2. Enregistrez.  
 3. Ouvrez le fichier `CNUM_SIGMA.py` sur votre environnement de travail (Thonny, Pyzo, Spider, Python, etc.).
 4. Exécutez le script. 
-5. Ouvrez l’agenda Google associé à l’adresse mail du master SIGMA : vous avez accès à l’agenda. 
+5. Ouvrez l’agenda Google associé à l’adresse mail du master SIGMA : vous avez accès à l’agenda.👍
+
 
 ## IV- Accès des étudiants à l’agenda
 
@@ -64,15 +65,15 @@ Afin que les étudiants puissent avoir accès à l’agenda Google en ligne, nou
 - Pour partager un agenda, demandez aux utilisateurs de s'y abonner, ou partagez-le avec une personne ou un groupe.
 - Dans la zone des autorisations, cliquez sur la flèche vers le bas et choisissez une option. Pour en savoir plus, consultez Paramètres d'autorisation.
 5. Cliquez sur Envoyer.
-6. Les invitations à des agendas groupés incluent des liens vers les agendas.
-7. Les utilisateurs reçoivent des notifications par e-mail lorsque des agendas sont partagés. Ces notifications par e-mail contiennent un lien Ajouter à l'agenda. Si un utilisateur clique sur ce lien, puis sur Ajouter un agenda, l'agenda s'affiche dans la liste "Autres agendas" de cet utilisateur.
+*Les invitations à des agendas groupés incluent des liens vers les agendas.*
+*Les utilisateurs reçoivent des notifications par e-mail lorsque des agendas sont partagés. Ces notifications par e-mail contiennent un lien Ajouter à l'agenda. Si un utilisateur clique sur ce lien, puis sur Ajouter un agenda, l'agenda s'affiche dans la liste "Autres agendas" de cet utilisateur.*
 
 ## V- Pistes d’amélioration
 
 Afin d’optimiser davantage ce code, nous avons identifié différentes pistes d’améliorations possibles ainsi que quelques recommandations : 
 
-1. Arriver à récupérer les horaires précis dans les commentaires et les ajuster directement sur l’agenda. Pour l’instant, le code parvient uniquement à adapter l’horaire quand il détecte un commentaire au format “9h-12h”. Par exemple, “8h30-12h30” ne fonctionne pas. De plus, nous recommandons une harmonisation lors de l’écriture des nouveaux horaires. Nous pensons que le mieux est le format “9h-12h” à la ligne, sans rien d’autre avant ou après. 
-2. Afin d'harmoniser la présentation des commentaires, nous recommandons aux professeurs d'utiliser le format suivant :
+* Arriver à récupérer les horaires précis dans les commentaires et les ajuster directement sur l’agenda. Pour l’instant, le code parvient uniquement à adapter l’horaire quand il détecte un commentaire au format “9h-12h”. Par exemple, “8h30-12h30” ne fonctionne pas. De plus, nous recommandons une harmonisation lors de l’écriture des nouveaux horaires. Nous pensons que le mieux est le format “9h-12h” à la ligne, sans rien d’autre avant ou après. 
+* Afin d'harmoniser la présentation des commentaires, nous recommandons aux professeurs d'utiliser le format suivant :
 - Horaire précis : [ex. 10h-12h]
 - Nom de l’intervenant(e) : [ex. M. Marc Lang]
 - Salle de cours : [ex. 1113 Ensat]
@@ -80,6 +81,6 @@ Afin d’optimiser davantage ce code, nous avons identifié différentes pistes 
 
 Chaque commentaire devra respecter ce format afin d’assurer une meilleure lisibilité et organisation des informations.  
 
-3. Suivre les modifications faites par les professeurs avec la création d’une feuille au sein du classeur Excel qui recense le avant/après pour avoir un suivi des modifications.
-4. Envoyer un mail à chaque personne utilisant l’agenda pour indiquer qu’une modification (avec le nom de l’UE et la date) a été effectuée.
-5. Avoir la possibilité de filtrer l’emploi du temps par UE, Lieux ou Intervenant. Pour cela, utiliser la fonction `groupby` de pandas.
+* Suivre les modifications faites par les professeurs avec la création d’une feuille au sein du classeur Excel qui recense le avant/après pour avoir un suivi des modifications.
+* Envoyer un mail à chaque personne utilisant l’agenda pour indiquer qu’une modification (avec le nom de l’UE et la date) a été effectuée.
+* Avoir la possibilité de filtrer l’emploi du temps par UE, Lieux ou Intervenant. Pour cela, utiliser la fonction `groupby` de pandas.
