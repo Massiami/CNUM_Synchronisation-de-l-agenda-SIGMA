@@ -28,12 +28,11 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # CONFIGURATION DU CODE : definition des chemins d'accès
 # ============================
 
+#Lit le fichier de configuration et renvoie un dictionnaire contenant les chemins et paramètres.
+#Chaque ligne doit être au format : clé = valeur.
+#Les lignes vides ou commençant par '#' sont ignorées.
+
 def read_config(config_file="config.txt"):
-    """
-    Lit le fichier de configuration et renvoie un dictionnaire contenant les chemins et paramètres.
-    Chaque ligne doit être au format : clé = valeur.
-    Les lignes vides ou commençant par '#' sont ignorées.
-    """
     config = {}
     # On utilise le répertoire du script pour construire le chemin absolu du fichier config.txt
     if os.path.exists(config_file):
@@ -195,13 +194,16 @@ mid_times = {
 }
 
 # Dictionnaire de correspondance couleurs -> lieux
+#Les codes couleurs sont ceux trouvés sur Excel ou Libreoffice (correspondant au Hex_# dans couleurs personnalisées)
 color_to_location = {
     "F8CBAD": "Salle UT2J sans ordi",
     "CCFFCC": "Salle ENSAT sans ordi",
     "99CCFF": "1003-Langue",
     "FF9933": "UT2J GS027",
     "FFCC66": "UT2J GS021",
-    "E2F0D9": "703 (projet) ou alternance (entreprise)"
+    "E2F0D9": "703 (projet) ou alternance (entreprise)",
+    "FAFA9E": "UT2J GS027",
+    "F5BCE9": "UT2JGS025"
 }
 
 # Pour convertir un libellé de mois en nombre
@@ -256,7 +258,7 @@ def split_subject_into_events(subject, date_str, halfday_label, location, descri
 # ---------------------------------------------------------------------------
 # Lecture du nouveau classeur modifié en mémoire 
 # ---------------------------------------------------------------------------
-ws = new_ws  # On utilise la feuille "M1 2324_modifie"
+ws = new_ws  # Par exemple, on utilise la feuille "M1 2324_modifie". Cette feuille n'apparait pas mais c'est sur celle ci qu'on travaille esnuite.
 
 # Lecture de l'entête (ligne 1)
 headers = [cell.value for cell in ws[1] if cell.value is not None]
@@ -362,8 +364,8 @@ print(f"✅ Fichier CSV généré : {output_csv}")
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 # Authentification : Authentifie l'utilisateur et renvoie un service Google Calendar.
-# Si erreur à ce niveau, supprimer le fichier token.json de votre dossier.
-# Cela va forcer le script à vous demander de vous réauthentifier avec votre adresse mail
+# Si erreur à ce niveau, il faut supprimer le fichier token.json du dossier.
+# Cela va forcer le script à vous demander de vous réauthentifier avec votre adresse mail.
 # ---------------------------------------------------------------------------
 
 # Autorisations Google Calendar
@@ -385,19 +387,19 @@ def authenticate_google(token_path="token.json", credentials_path="credentials.j
 
     return build("calendar", "v3", credentials=creds)
 
+#Convertit une date et une heure en objet datetime.
 def convert_to_datetime(date_str, time_str):
-    """Convertit une date et une heure en objet datetime."""
     datetime_str = f"{date_str} {time_str}"
-    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")  # Adapter au format de tes données
+    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")  
 
+#Génère un identifiant unique. 
 def sanitize_csv_id(input_str):
-    """Génère un identifiant unique nettoyé."""
     allowed = set("abcdefghijklmnopqrstuvwxyz0123456789_")
     result = input_str.replace(" ", "_").lower()
     return ''.join(c for c in result if c in allowed)
 
+#Charge tous les événements existants avec leur csv_id. But = limiter le nombre de requêtes afin qu'elles puissent toutes être prises en compte.
 def fetch_existing_events(service):
-    """Charge tous les événements existants avec leur csv_id pour limiter les requêtes."""
     events_result = service.events().list(
         calendarId='primary',
         maxResults=1000,  # Adapter selon le nombre d'événements attendus
@@ -412,9 +414,9 @@ def fetch_existing_events(service):
 
     return existing_events
 
+# Associer des couleurs aux salles dans Google Calendar. Il y en a 11 disponibles dans Google Calendar. 
 def sync_events(service, df):
-    """Optimise la mise à jour et création d'événements en limitant les requêtes."""
-    room_colors = {  # associer des couleurs aux salles dans Google Calendar 
+    room_colors = {  
         "Salle UT2J sans ordi": 11,  
         "UT2J GS027": 6,  
         "UT2J GS021": 5,  
@@ -470,7 +472,8 @@ def sync_events(service, df):
         else:
             events_to_create.append(event_body)
 
-    # Suppression des événements obsolètes
+    # Suppression des événements obsolètes afin qu'il n'y ai pas de superposition d'évènements.
+    # Si l'évènement existe déjà, il est conservé. S'il y a la moindre modification, il est supprimé puis un nouvel évènement est crée avec les mises à jour 
     existing_csv_ids = set(existing_events.keys())
     new_csv_ids = set(sanitize_csv_id(f"{row['Date']}_{row['Start Time']}_{row['Subject']}") for _, row in df.iterrows())
     obsolete_ids = existing_csv_ids - new_csv_ids
@@ -488,9 +491,10 @@ def sync_events(service, df):
         batch.add(service.events().delete(calendarId='primary', eventId=event_id))
     
     batch.execute()  # Envoie toutes les requêtes en une seule fois
+    #--> permet d'éviter la saturation du système et de ne pas atteindre la limite de l'API Google Calendar
 
 def main():
-    # Lecture du fichier de configuration
+    # Lecture du fichier de configuration contenant tous les chemins d'accès
     config = read_config()
     token_path = config.get("token_path", "token.json")
     credentials_path = config.get("credentials_path", "credentials.json")
