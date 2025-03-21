@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
 
+# =============================================================================
+# =============================================================================
+#                           AGENDA SIGMA
+# =============================================================================
+# =============================================================================
+
+
+# CHARGEMENT DES BIBLIOTHEQUES
+# ============================
+
 import os
 import re
 import csv
@@ -13,6 +23,10 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
+
+
+# CONFIGURATION DU CODE : definition des chemins d'accès
+# ============================
 
 def read_config(config_file="config.txt"):
     """
@@ -32,11 +46,12 @@ def read_config(config_file="config.txt"):
                     key, value = line.split("=", 1)
                     config[key.strip()] = value.strip()
     else:
-        print(f"Fichier de configuration '{config_file}' non trouvé dans {script_dir}. Les chemins par défaut seront utilisés.")
+            print(f"Fichier de configuration '{config_file}' non trouvé dans {script_dir}. Les chemins par défaut seront utilisés.")
     return config
 
 # Lecture du fichier de configuration
 config = read_config()
+
 
 # =============================================================================
 # PARTIE  1: SELECTION DU TABLEAU D'INTERET
@@ -47,9 +62,10 @@ file_path = config.get("excel_file_path")
 sheet_name = config.get("sheet_name", "M1 2324")  # Nom de la feuille contenant l'emploi du temps ou les données d'intérêt
 
 print("Début de l'exécution du script...")
+
 # ------------------------------------------------------------------
 # Chargement du fichier Excel original avec openpyxl pour récupérer
-# les informations de formatage (couleurs, commentaires) et les cellules fusionnées.
+# les informations de formatage (couleurs, commentaires) et les cellules fusionnées
 # ------------------------------------------------------------------
 wb_orig = load_workbook(file_path)
 ws_orig = wb_orig[sheet_name]
@@ -113,10 +129,9 @@ for row_idx in range(len(df)):
 
 # ------------------------------------------------------------------
 # Gestion des cellules fusionnées :
-# Pour chaque plage de cellules fusionnées détectée dans l'original,
-# on copie la valeur, la couleur et le commentaire de la cellule en haut à gauche
-# vers toutes les cellules correspondantes dans la nouvelle feuille.
-#
+#   Pour chaque plage de cellules fusionnées détectée dans l'original,
+#   on copie la valeur, la couleur et le commentaire de la cellule en haut à gauche
+#   vers toutes les cellules correspondantes dans la nouvelle feuille.
 # Les indices sont recalculés car l'en-tête du nouveau classeur remplace la ligne 5 de l'original
 # et la colonne E devient la première colonne.
 # ------------------------------------------------------------------
@@ -142,6 +157,7 @@ for merge_range in merged_cells:
                 new_cell.fill = PatternFill(start_color=top_left_color, end_color=top_left_color, fill_type="solid")
             if top_left_comment:
                 new_cell.comment = openpyxl.comments.Comment(top_left_comment, "Author")
+                
 
 # =============================================================================
 # PARTIE 2: CREATION DU FICHIER CSV
@@ -238,7 +254,7 @@ def split_subject_into_events(subject, date_str, halfday_label, location, descri
     return events
 
 # ---------------------------------------------------------------------------
-# Lecture du nouveau classeur modifié en mémoire (résultat de CODE 1)
+# Lecture du nouveau classeur modifié en mémoire 
 # ---------------------------------------------------------------------------
 ws = new_ws  # On utilise la feuille "M1 2324_modifie"
 
@@ -340,13 +356,14 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
 
 print(f"✅ Fichier CSV généré : {output_csv}")
 
+
 # ---------------------------------------------------------------------------
 # PARTIE 3 : CREATION DE L'AGENDA GOOGLE
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
-# 1- Authentification : Authentifie l'utilisateur et renvoie un service Google Calendar.
-#Si erreur à ce niveau, supprimer le fichier token.json de votre dossier.
-#Cela va forcer le script à vous demander de vous réauthentifier avec votre adresse mail
+# Authentification : Authentifie l'utilisateur et renvoie un service Google Calendar.
+# Si erreur à ce niveau, supprimer le fichier token.json de votre dossier.
+# Cela va forcer le script à vous demander de vous réauthentifier avec votre adresse mail
 # ---------------------------------------------------------------------------
 
 # Autorisations Google Calendar
