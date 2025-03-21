@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import os
 import re
 import csv
@@ -15,9 +14,6 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# =============================================================================
-# Lecture du fichier de configuration
-# =============================================================================
 def read_config(config_file="config.txt"):
     """
     Lit le fichier de configuration et renvoie un dictionnaire contenant les chemins et paramètres.
@@ -57,9 +53,6 @@ print("Début de l'exécution du script...")
 # ------------------------------------------------------------------
 wb_orig = load_workbook(file_path)
 ws_orig = wb_orig[sheet_name]
-
-# Récupération des plages de cellules fusionnées dans la zone d'intérêt
-# La zone d'intérêt correspond aux colonnes E à O (colonnes 5 à 15) et aux lignes 5 à 34.
 merged_cells = []
 for merge_range in ws_orig.merged_cells.ranges:
     if (merge_range.min_col >= 5 and merge_range.max_col <= 15 and 
@@ -86,12 +79,12 @@ df = df.iloc[:29]
 cell_colors = {}
 cell_comments = {}
 for row_idx, row in enumerate(ws_orig.iter_rows(min_row=6, max_row=34, min_col=5, max_col=15), start=0):
-    for col_idx, cell in enumerate(row, start=0):  # Indices alignés avec le DataFrame
+    for col_idx, cell in enumerate(row, start=0):  # Les indices commencent à 0 pour aligner avec le DataFrame
         if cell.fill and cell.fill.fgColor and cell.fill.fgColor.rgb and cell.fill.fgColor.rgb != "00000000":
             cell_colors[(row_idx, col_idx)] = cell.fill.fgColor.rgb
         if cell.comment:
             cell_comments[(row_idx, col_idx)] = cell.comment.text
-
+           
 # ------------------------------------------------------------------
 # Écriture des données (sans formatage) dans un nouveau classeur Excel en mémoire.
 # Le nouveau classeur contiendra l'en-tête en ligne 1 et les données à partir de la ligne 2.
@@ -154,9 +147,8 @@ for merge_range in merged_cells:
 # PARTIE 2: CREATION DU FICHIER CSV
 # =============================================================================
 
-# Définition du chemin de sortie pour le fichier CSV via le fichier de configuration
-default_output_csv = os.path.join(os.path.dirname(file_path), "output.csv")
-output_csv = config.get("output_csv", default_output_csv)
+# Définition du chemin de sortie pour le fichier CSV
+output_csv = os.path.join(os.path.dirname(file_path), "output.csv")
 
 # Dictionnaire des horaires (clé = intitulé exact de la colonne, ex : "Lu Matin")
 horaires = {
@@ -187,7 +179,6 @@ mid_times = {
 }
 
 # Dictionnaire de correspondance couleurs -> lieux
-#Attention : ajouter les codes couelurs et leurs salles respectives s'il y a des ajouts
 color_to_location = {
     "F8CBAD": "Salle UT2J sans ordi",
     "CCFFCC": "Salle ENSAT sans ordi",
@@ -326,91 +317,6 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
             events_to_write = split_subject_into_events(subject, date_str, halfday_label, location, description)
             for ev in events_to_write:
                 writer.writerow(ev)
-                
-            # --------------------------------------------------------------------------------
-            # AMÉLIORATION : Gérer les semaines qui chevauchent deux mois (ex : "30-03 nov 23")
-            # --------------------------------------------------------------------------------
-            week_info = str(week_cell.value).strip().lower()
-            # Regex pour capturer day_start, day_end, month_str, year_str
-            match = re.search(r"(\d+)\s*-\s*(\d+)\s+([a-zA-Zéû\.]+)\s+(\d+)", week_info)
-            if not match:
-                # Pas de correspondance, on ignore la ligne
-                continue
-
-            try:
-                day_start = int(match.group(1))
-                day_end = int(match.group(2))
-                month_str = match.group(3).replace('.', '')
-                year_str = match.group(4)
-
-                # Conversion mois/année
-                month = months_fr.get(month_str, None)
-                if not month:
-                    continue
-
-                if len(year_str) == 2:
-                    year = 2000 + int(year_str)
-                else:
-                    year = int(year_str)
-
-                # Si day_end < day_start => on suppose que day_start est le mois précédent
-                # Exemple : "30-03 nov 23" => 30 (oct), 3 (nov)
-                if day_end < day_start:
-                    new_month = month - 1
-                    new_year = year
-                    if new_month < 1:      # Si on est avant janvier => année précédente
-                        new_month = 12
-                        new_year -= 1
-
-                    # day_start est dans le "nouveau" mois
-                    monday_date = datetime(new_year, new_month, day_start)
-                else:
-                    # Sinon, c'est le même mois
-                    monday_date = datetime(year, month, day_start)
-
-            except Exception as e:
-                print(f"Erreur de parsing sur '{week_info}' : {e}")
-                continue
-
-            # Parcours des colonnes B.. (les demi-journées)
-            for col_index, cell in enumerate(row[1:], start=1):
-                if col_index - 1 < len(halfday_headers):
-                    halfday_label = halfday_headers[col_index - 1]
-                else:
-                    continue
-
-                # Si la cellule est vide et sans commentaire, on ignore
-                if (cell.value is None) and (cell.comment is None):
-                    continue
-
-                # Détermination du jour "Lu", "Ma", "Me", ...
-                day_abbr = halfday_label.split()[0]
-                offset = day_offsets.get(day_abbr, None)
-                if offset is None:
-                    continue
-
-                # Calcul de la date effective de l'événement
-                event_date = monday_date + timedelta(days=offset)
-                date_str = event_date.strftime("%Y-%m-%d")
-
-                # Récupération du contenu
-                subject = str(cell.value).strip() if cell.value else ""
-                description = cell.comment.text.strip() if cell.comment else ""
-
-                # Récupération de la couleur pour la salle
-                location = ""
-                if cell.fill and cell.fill.fgColor and cell.fill.fgColor.rgb:
-                    rgb = cell.fill.fgColor.rgb
-                    if rgb.startswith("FF") and len(rgb) == 8:
-                        color_code = rgb[2:]
-                    else:
-                        color_code = rgb
-                    location = color_to_location.get(color_code, "")
-
-                # Scinder la cellule si elle contient "/"
-                events_to_write = split_subject_into_events(subject, date_str, halfday_label, location, description)
-                for ev in events_to_write:
-                    writer.writerow(ev)    
 
 print(f"✅ Fichier CSV généré : {output_csv}")
 
@@ -562,3 +468,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
