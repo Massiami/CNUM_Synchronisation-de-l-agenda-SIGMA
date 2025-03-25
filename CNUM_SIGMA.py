@@ -28,9 +28,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 # CONFIGURATION DU CODE : definition des chemins d'accès
 # ============================
 
-#Lit le fichier de configuration et renvoie un dictionnaire contenant les chemins et paramètres.
-#Chaque ligne doit être au format : clé = valeur.
-#Les lignes vides ou commençant par '#' sont ignorées.
+# Lit le fichier de configuration et renvoie un dictionnaire contenant les chemins et paramètres.
+# Chaque ligne doit être au format : clé = valeur.
+# Les lignes vides ou commençant par '#' sont ignorées.
+
 
 def read_config(config_file="config.txt"):
     config = {}
@@ -45,8 +46,12 @@ def read_config(config_file="config.txt"):
                     key, value = line.split("=", 1)
                     config[key.strip()] = value.strip()
     else:
-            print(f"Fichier de configuration '{config_file}' non trouvé dans {script_dir}. Les chemins par défaut seront utilisés.")
+        print(
+            f"Fichier de configuration '{config_file}' non trouvé dans" # line too long split in two
+            "{script_dir}.Les chemins par défaut seront utilisés."  # script_dir jamais défini ici
+        )
     return config
+
 
 # Lecture du fichier de configuration
 config = read_config()
@@ -58,7 +63,9 @@ config = read_config()
 
 # Définition des chemins et paramètres de la feuille d'intérêt via le fichier de configuration
 file_path = config.get("excel_file_path")
-sheet_name = config.get("sheet_name", "M1 2324")  # Nom de la feuille contenant l'emploi du temps ou les données d'intérêt
+sheet_name = config.get(
+    "sheet_name", "M1 2324"
+)  # Nom de la feuille contenant l'emploi du temps ou les données d'intérêt
 
 print("Début de l'exécution du script...")
 
@@ -70,8 +77,12 @@ wb_orig = load_workbook(file_path)
 ws_orig = wb_orig[sheet_name]
 merged_cells = []
 for merge_range in ws_orig.merged_cells.ranges:
-    if (merge_range.min_col >= 5 and merge_range.max_col <= 15 and 
-        merge_range.min_row >= 5 and merge_range.max_row <= 34):
+    if (
+        merge_range.min_col >= 5
+        and merge_range.max_col <= 15
+        and merge_range.min_row >= 5
+        and merge_range.max_row <= 34
+    ):
         merged_cells.append(merge_range)
 
 # ------------------------------------------------------------------
@@ -81,8 +92,14 @@ for merge_range in ws_orig.merged_cells.ranges:
 # - La ligne lue en première position (après skiprows) sert d'en-tête (header=0).
 # - On limite le DataFrame aux 29 premières lignes de données.
 # ------------------------------------------------------------------
-df = pd.read_excel(file_path, sheet_name=sheet_name,
-                   skiprows=4, usecols="E:O", header=0, engine="openpyxl")
+df = pd.read_excel(
+    file_path,
+    sheet_name=sheet_name,
+    skiprows=4,
+    usecols="E:O",
+    header=0,
+    engine="openpyxl",
+)
 df = df.iloc[:29]
 
 # ------------------------------------------------------------------
@@ -93,13 +110,22 @@ df = df.iloc[:29]
 # ------------------------------------------------------------------
 cell_colors = {}
 cell_comments = {}
-for row_idx, row in enumerate(ws_orig.iter_rows(min_row=6, max_row=34, min_col=5, max_col=15), start=0):
-    for col_idx, cell in enumerate(row, start=0):  # Les indices commencent à 0 pour aligner avec le DataFrame
-        if cell.fill and cell.fill.fgColor and cell.fill.fgColor.rgb and cell.fill.fgColor.rgb != "00000000":
+for row_idx, row in enumerate(
+    ws_orig.iter_rows(min_row=6, max_row=34, min_col=5, max_col=15), start=0
+):
+    for col_idx, cell in enumerate(
+        row, start=0
+    ):  # Les indices commencent à 0 pour aligner avec le DataFrame
+        if (
+            cell.fill
+            and cell.fill.fgColor
+            and cell.fill.fgColor.rgb
+            and cell.fill.fgColor.rgb != "00000000"
+        ):
             cell_colors[(row_idx, col_idx)] = cell.fill.fgColor.rgb
         if cell.comment:
             cell_comments[(row_idx, col_idx)] = cell.comment.text
-           
+
 # ------------------------------------------------------------------
 # Écriture des données (sans formatage) dans un nouveau classeur Excel en mémoire.
 # Le nouveau classeur contiendra l'en-tête en ligne 1 et les données à partir de la ligne 2.
@@ -119,12 +145,18 @@ new_ws = new_wb["M1 2324_modifie"]
 # dans le nouveau classeur (les données commencent en ligne 2).
 for row_idx in range(len(df)):
     for col_idx in range(len(df.columns)):
-        cell = new_ws.cell(row=row_idx + 2, column=col_idx + 1)  # Ajustement : ligne d'en-tête décalée d'une unité
+        cell = new_ws.cell(
+            row=row_idx + 2, column=col_idx + 1
+        )  # Ajustement : ligne d'en-tête décalée d'une unité
         if (row_idx, col_idx) in cell_colors:
             color = cell_colors[(row_idx, col_idx)]
-            cell.fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
+            cell.fill = PatternFill(
+                start_color=color, end_color=color, fill_type="solid"
+            )
         if (row_idx, col_idx) in cell_comments:
-            cell.comment = openpyxl.comments.Comment(cell_comments[(row_idx, col_idx)], "Author")
+            cell.comment = openpyxl.comments.Comment(
+                cell_comments[(row_idx, col_idx)], "Author"
+            )
 
 # ------------------------------------------------------------------
 # Gestion des cellules fusionnées :
@@ -137,15 +169,26 @@ for row_idx in range(len(df)):
 for merge_range in merged_cells:
     new_min_row = merge_range.min_row - 4  # Décalage dû à l'en-tête
     new_max_row = merge_range.max_row - 4
-    new_min_col = merge_range.min_col - 4  # Décalage des colonnes (colonne E devient colonne 1)
+    new_min_col = (
+        merge_range.min_col - 4
+    )  # Décalage des colonnes (colonne E devient colonne 1)
     new_max_col = merge_range.max_col - 4
 
-    original_top_left = ws_orig.cell(row=merge_range.min_row, column=merge_range.min_col)
+    original_top_left = ws_orig.cell(
+        row=merge_range.min_row, column=merge_range.min_col
+    )
     top_left_value = original_top_left.value
     top_left_color = None
-    top_left_comment = original_top_left.comment.text if original_top_left.comment else None
-    
-    if original_top_left.fill and original_top_left.fill.fgColor and original_top_left.fill.fgColor.rgb and original_top_left.fill.fgColor.rgb != "00000000":
+    top_left_comment = (
+        original_top_left.comment.text if original_top_left.comment else None
+    )
+
+    if (
+        original_top_left.fill
+        and original_top_left.fill.fgColor
+        and original_top_left.fill.fgColor.rgb
+        and original_top_left.fill.fgColor.rgb != "00000000"
+    ):
         top_left_color = original_top_left.fill.fgColor.rgb
 
     for r in range(new_min_row, new_max_row + 1):
@@ -153,10 +196,14 @@ for merge_range in merged_cells:
             new_cell = new_ws.cell(row=r, column=c)
             new_cell.value = top_left_value
             if top_left_color:
-                new_cell.fill = PatternFill(start_color=top_left_color, end_color=top_left_color, fill_type="solid")
+                new_cell.fill = PatternFill(
+                    start_color=top_left_color,
+                    end_color=top_left_color,
+                    fill_type="solid",
+                )
             if top_left_comment:
                 new_cell.comment = openpyxl.comments.Comment(top_left_comment, "Author")
-                
+
 
 # =============================================================================
 # PARTIE 2: CREATION DU FICHIER CSV
@@ -194,7 +241,8 @@ mid_times = {
 }
 
 # Dictionnaire de correspondance couleurs -> lieux
-#Les codes couleurs sont ceux trouvés sur Excel ou Libreoffice (correspondant au Hex_# dans couleurs personnalisées)
+# Les codes couleurs sont ceux trouvés sur Excel ou Libreoffice  # ligne trop longue découpée
+# (correspondant au Hex_# dans couleurs personnalisées)
 color_to_location = {
     "F8CBAD": "Salle UT2J sans ordi",
     "CCFFCC": "Salle ENSAT sans ordi",
@@ -203,30 +251,53 @@ color_to_location = {
     "FFCC66": "UT2J GS021",
     "E2F0D9": "703 (projet) ou alternance (entreprise)",
     "FAFA9E": "UT2J GS027",
-    "F5BCE9": "UT2JGS025"
+    "F5BCE9": "UT2JGS025",
 }
 
 # Pour convertir un libellé de mois en nombre
 months_fr = {
-    "jan": 1, "janv": 1, "janv.": 1, "févr": 2, "fev": 2, "fev.": 2, "févr.": 2,
-    "mars": 3, "mars.": 3, "avr": 4, "avr.": 4, "avril": 4,
-    "mai": 5, "mai.": 5, "juin": 6, "juin.": 6,
-    "juil": 7, "juil.": 7, "juillet": 7,
-    "août": 8, "aout": 8, "aout.": 8, "août.": 8,
-    "sept": 9, "sept.": 9, "septembre": 9,
-    "oct": 10, "oct.": 10, "octobre": 10,
-    "nov": 11, "nov.": 11, "novembre": 11,
-    "dec": 12, "dec.": 12, "déc": 12, "déc.": 12, "décembre": 12
+    "jan": 1,
+    "janv": 1,
+    "janv.": 1,
+    "févr": 2,
+    "fev": 2,
+    "fev.": 2,
+    "févr.": 2,
+    "mars": 3,
+    "mars.": 3,
+    "avr": 4,
+    "avr.": 4,
+    "avril": 4,
+    "mai": 5,
+    "mai.": 5,
+    "juin": 6,
+    "juin.": 6,
+    "juil": 7,
+    "juil.": 7,
+    "juillet": 7,
+    "août": 8,
+    "aout": 8,
+    "aout.": 8,
+    "août.": 8,
+    "sept": 9,
+    "sept.": 9,
+    "septembre": 9,
+    "oct": 10,
+    "oct.": 10,
+    "octobre": 10,
+    "nov": 11,
+    "nov.": 11,
+    "novembre": 11,
+    "dec": 12,
+    "dec.": 12,
+    "déc": 12,
+    "déc.": 12,
+    "décembre": 12,
 }
 
 # Pour faire correspondre "Lu" -> 0 (lundi), "Ma" -> 1 (mardi), etc.
-day_offsets = {
-    "Lu": 0,
-    "Ma": 1,
-    "Me": 2,
-    "Je": 3,
-    "Ve": 4
-}
+day_offsets = {"Lu": 0, "Ma": 1, "Me": 2, "Je": 3, "Ve": 4}
+
 
 # ---------------------------------------------------------------------------
 # Fonction pour scinder le contenu d'une cellule si elle contient "/"
@@ -244,22 +315,46 @@ def split_subject_into_events(subject, date_str, halfday_label, location, descri
             first_part, second_part = parts
             if first_part in ["---", "X"]:
                 if second_part not in ["---", "X"]:
-                    events.append([second_part, date_str, mid_time, end_time, location, description])
+                    events.append(
+                        [
+                            second_part,
+                            date_str,
+                            mid_time,
+                            end_time,
+                            location,
+                            description,
+                        ]
+                    )
             else:
-                events.append([first_part, date_str, start_time, mid_time, location, description])
+                events.append(
+                    [first_part, date_str, start_time, mid_time, location, description]
+                )
                 if second_part not in ["---", "X"]:
-                    events.append([second_part, date_str, mid_time, end_time, location, description])
+                    events.append(
+                        [
+                            second_part,
+                            date_str,
+                            mid_time,
+                            end_time,
+                            location,
+                            description,
+                        ]
+                    )
         else:
-            events.append([subject, date_str, start_time, end_time, location, description])
+            events.append(
+                [subject, date_str, start_time, end_time, location, description]
+            )
     else:
         events.append([subject, date_str, start_time, end_time, location, description])
     return events
 
-# ---------------------------------------------------------------------------
-# Lecture du nouveau classeur modifié en mémoire 
-# ---------------------------------------------------------------------------
-ws = new_ws  # Par exemple, on utilise la feuille "M1 2324_modifie". Cette feuille n'apparait pas mais c'est sur celle ci qu'on travaille esnuite.
 
+# ---------------------------------------------------------------------------
+# Lecture du nouveau classeur modifié en mémoire
+# ---------------------------------------------------------------------------
+# Par exemple, on utilise la feuille "M1 2324_modifie".  # line too long splitted
+# Cette feuille n'apparait pas mais c'est sur celle ci qu'on travaille esnuite.
+ws = new_ws
 # Lecture de l'entête (ligne 1)
 headers = [cell.value for cell in ws[1] if cell.value is not None]
 if len(headers) < 2:
@@ -271,8 +366,10 @@ halfday_headers = headers[1:]  # on enlève la 1re colonne (date)
 # Ouverture du fichier CSV en écriture
 # ---------------------------------------------------------------------------
 with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
-    writer = csv.writer(csvfile, delimiter=';')
-    writer.writerow(["Subject", "Date", "Start Time", "End Time", "Location", "Description"])
+    writer = csv.writer(csvfile, delimiter=";")
+    writer.writerow(
+        ["Subject", "Date", "Start Time", "End Time", "Location", "Description"]
+    )
 
     # Parcours des lignes à partir de la 2e
     for row_idx, row in enumerate(ws.iter_rows(min_row=2), start=2):
@@ -289,7 +386,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
         try:
             day_start = int(match.group(1))
             day_end = int(match.group(2))
-            month_str = match.group(3).replace('.', '')
+            month_str = match.group(3).replace(".", "")
             year_str = match.group(4)
 
             # Conversion mois/année
@@ -321,7 +418,6 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
             print(f"Erreur de parsing sur '{week_info}' : {e}")
             continue
 
-
         # Parcours des colonnes B.. (les demi-journées)
         for col_index, cell in enumerate(row[1:], start=1):
             if col_index - 1 < len(halfday_headers):
@@ -352,7 +448,9 @@ with open(output_csv, "w", newline="", encoding="utf-8") as csvfile:
                     color_code = rgb
                 location = color_to_location.get(color_code, "")
 
-            events_to_write = split_subject_into_events(subject, date_str, halfday_label, location, description)
+            events_to_write = split_subject_into_events(
+                subject, date_str, halfday_label, location, description
+            )
             for ev in events_to_write:
                 writer.writerow(ev)
 
@@ -371,6 +469,7 @@ print(f"✅ Fichier CSV généré : {output_csv}")
 # Autorisations Google Calendar
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+
 def authenticate_google(token_path="token.json", credentials_path="credentials.json"):
     creds = None
     if os.path.exists(token_path):
@@ -387,46 +486,60 @@ def authenticate_google(token_path="token.json", credentials_path="credentials.j
 
     return build("calendar", "v3", credentials=creds)
 
-#Convertit une date et une heure en objet datetime.
+
+# Convertit une date et une heure en objet datetime.
 def convert_to_datetime(date_str, time_str):
     datetime_str = f"{date_str} {time_str}"
-    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")  
+    return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
 
-#Génère un identifiant unique. 
+
+# Génère un identifiant unique.
 def sanitize_csv_id(input_str):
     allowed = set("abcdefghijklmnopqrstuvwxyz0123456789_")
     result = input_str.replace(" ", "_").lower()
-    return ''.join(c for c in result if c in allowed)
+    return "".join(c for c in result if c in allowed)
 
-#Charge tous les événements existants avec leur csv_id. But = limiter le nombre de requêtes afin qu'elles puissent toutes être prises en compte.
+
+# Charge tous les événements existants avec leur csv_id.  # line too long splitted
+# But = limiter le nombre de requêtes afin qu'elles puissent toutes être prises en compte.
 def fetch_existing_events(service):
-    events_result = service.events().list(
-        calendarId='primary',
-        maxResults=1000,  # Adapter selon le nombre d'événements attendus
-        singleEvents=True
-    ).execute()
+    events_result = (
+        service.events()
+        .list(
+            calendarId="primary",
+            maxResults=1000,  # Adapter selon le nombre d'événements attendus
+            singleEvents=True,
+        )
+        .execute()
+    )
 
     existing_events = {}
-    for event in events_result.get('items', []):
-        csv_id = event.get('extendedProperties', {}).get('private', {}).get('csv_id')
+    for event in events_result.get("items", []):
+        csv_id = event.get("extendedProperties", {}).get("private", {}).get("csv_id")
         if csv_id:
-            existing_events[csv_id] = event  # Stocke l'événement existant par son ID unique
+            existing_events[csv_id] = (
+                event  # Stocke l'événement existant par son ID unique
+            )
 
     return existing_events
 
-# Associer des couleurs aux salles dans Google Calendar. Il y en a 11 disponibles dans Google Calendar. 
+
+# Associer des couleurs aux salles dans Google Calendar. # line too long splitted
+# Il y en a 11 disponibles dans Google Calendar.
 def sync_events(service, df):
-    room_colors = {  
-        "Salle UT2J sans ordi": 11,  
-        "UT2J GS027": 6,  
-        "UT2J GS021": 5,  
-        "1003-Langue": 7,  
+    room_colors = {
+        "Salle UT2J sans ordi": 11,
+        "UT2J GS027": 6,
+        "UT2J GS021": 5,
+        "1003-Langue": 7,
         "Salle ENSAT sans ordi": 10,
         "703 (projet) ou alternance (entreprise)": 2,
         "UT2J GS028": 4,
     }
 
-    existing_events = fetch_existing_events(service)  # Récupération en une seule requête
+    existing_events = fetch_existing_events(
+        service
+    )  # Récupération en une seule requête
     events_to_create = []
     events_to_update = []
     events_to_delete = []
@@ -434,64 +547,89 @@ def sync_events(service, df):
     for _, row in df.iterrows():
         raw_id = f"{row['Date']}_{row['Start Time']}_{row['Subject']}"
         csv_id = sanitize_csv_id(raw_id)
-        
-        start_datetime = convert_to_datetime(row['Date'], row['Start Time'])
-        end_datetime = convert_to_datetime(row['Date'], row['End Time'])
+
+        start_datetime = convert_to_datetime(row["Date"], row["Start Time"])
+        end_datetime = convert_to_datetime(row["Date"], row["End Time"])
 
         # Récupère la couleur associée à la salle, ou utilise une couleur par défaut
-        location = row['Location']
-        color_id = room_colors.get(location, 5)  # Par défaut, utilise la couleur 5 si la salle n'est pas dans le dictionnaire
+        location = row["Location"]
+        color_id = room_colors.get(
+            location, 5
+        )  # Par défaut, utilise la couleur 5 si la salle n'est pas dans le dictionnaire
 
         event_body = {
-            'summary': row['Subject'],
-            'location': location,
-            'description': row['Description'],
-            'start': {'dateTime': start_datetime.isoformat(), 'timeZone': 'Europe/Paris'},
-            'end': {'dateTime': end_datetime.isoformat(), 'timeZone': 'Europe/Paris'},
-            'extendedProperties': {'private': {'csv_id': csv_id}},
-            'colorId': color_id  # Ajoute l'identifiant de couleur
+            "summary": row["Subject"],
+            "location": location,
+            "description": row["Description"],
+            "start": {
+                "dateTime": start_datetime.isoformat(),
+                "timeZone": "Europe/Paris",
+            },
+            "end": {"dateTime": end_datetime.isoformat(), "timeZone": "Europe/Paris"},
+            "extendedProperties": {"private": {"csv_id": csv_id}},
+            "colorId": color_id,  # Ajoute l'identifiant de couleur
         }
 
         if csv_id in existing_events:
             existing_event = existing_events[csv_id]
             differences = []
-            if existing_event.get('summary', '') != row['Subject']:
-                differences.append('summary')
-            if existing_event.get('location', '') != location:
-                differences.append('location')
-            if existing_event.get('description', '') != row['Description']:
-                differences.append('description')
-            if existing_event.get('start', {}).get('dateTime', '') != start_datetime.isoformat():
-                differences.append('start time')
-            if existing_event.get('end', {}).get('dateTime', '') != end_datetime.isoformat():
-                differences.append('end time')
+            if existing_event.get("summary", "") != row["Subject"]:
+                differences.append("summary")
+            if existing_event.get("location", "") != location:
+                differences.append("location")
+            if existing_event.get("description", "") != row["Description"]:
+                differences.append("description")
+            if (
+                existing_event.get("start", {}).get("dateTime", "")
+                != start_datetime.isoformat()
+            ):
+                differences.append("start time")
+            if (
+                existing_event.get("end", {}).get("dateTime", "")
+                != end_datetime.isoformat()
+            ):
+                differences.append("end time")
 
             if differences:
-                event_body['id'] = existing_event['id']  # Nécessaire pour la mise à jour en batch
+                event_body["id"] = existing_event[
+                    "id"
+                ]  # Nécessaire pour la mise à jour en batch
                 events_to_update.append(event_body)
         else:
             events_to_create.append(event_body)
 
     # Suppression des événements obsolètes afin qu'il n'y ai pas de superposition d'évènements.
-    # Si l'évènement existe déjà, il est conservé. S'il y a la moindre modification, il est supprimé puis un nouvel évènement est crée avec les mises à jour 
+    # Si l'évènement existe déjà, il est conservé. S'il y a la moindre modification, # line too long splitted
+    # il est supprimé puis un nouvel évènement est crée avec les mises à jour
     existing_csv_ids = set(existing_events.keys())
-    new_csv_ids = set(sanitize_csv_id(f"{row['Date']}_{row['Start Time']}_{row['Subject']}") for _, row in df.iterrows())
+    new_csv_ids = set(
+        sanitize_csv_id(f"{row['Date']}_{row['Start Time']}_{row['Subject']}")
+        for _, row in df.iterrows()
+    )
     obsolete_ids = existing_csv_ids - new_csv_ids
     for obsolete_id in obsolete_ids:
-        events_to_delete.append(existing_events[obsolete_id]['id'])
+        events_to_delete.append(existing_events[obsolete_id]["id"])
 
-    print(f"Création : {len(events_to_create)} | Mise à jour : {len(events_to_update)} | Suppression : {len(events_to_delete)}")
+    print(
+        f"Création : {len(events_to_create)} | Mise à jour : {len(events_to_update)} | Suppression : {len(events_to_delete)}"
+    )
 
     batch = service.new_batch_http_request()
     for event in events_to_create:
-        batch.add(service.events().insert(calendarId='primary', body=event))
+        batch.add(service.events().insert(calendarId="primary", body=event))
     for event in events_to_update:
-        batch.add(service.events().update(calendarId='primary', eventId=event['id'], body=event))
+        batch.add(
+            service.events().update(
+                calendarId="primary", eventId=event["id"], body=event
+            )
+        )
     for event_id in events_to_delete:
-        batch.add(service.events().delete(calendarId='primary', eventId=event_id))
-    
+        batch.add(service.events().delete(calendarId="primary", # line too long splitted
+                                          eventId=event_id))
+
     batch.execute()  # Envoie toutes les requêtes en une seule fois
-    #--> permet d'éviter la saturation du système et de ne pas atteindre la limite de l'API Google Calendar
+    # --> permet d'éviter la saturation du système et de ne pas atteindre la limite de l'API Google Calendar
+
 
 def main():
     # Lecture du fichier de configuration contenant tous les chemins d'accès
@@ -499,15 +637,14 @@ def main():
     token_path = config.get("token_path", "token.json")
     credentials_path = config.get("credentials_path", "credentials.json")
     output_csv = config.get("output_csv")
-    
+
     service = authenticate_google(token_path, credentials_path)
-    
-    df = pd.read_csv(output_csv, sep=';')
+
+    df = pd.read_csv(output_csv, sep=";")
     df.columns = df.columns.str.strip()  # Nettoie les colonnes
-    
+
     sync_events(service, df)
+
 
 if __name__ == "__main__":
     main()
-
-
