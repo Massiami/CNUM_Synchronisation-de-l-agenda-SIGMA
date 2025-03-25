@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# =============================================================================
+# =============================================================================
+#                           AGENDA SIGMA
+# =============================================================================
+# =============================================================================
 """
 Script complet pour la gestion de l'agenda Sigma :
 - Surveillance des modifications dans un fichier Excel (journal de modifications)
@@ -7,6 +12,8 @@ Script complet pour la gestion de l'agenda Sigma :
 - Synchronisation avec Google Calendar (création, mise à jour et suppression en batch)
 """
 
+# CHARGEMENT DES BIBLIOTHEQUES
+# ============================
 import csv
 import os
 import time

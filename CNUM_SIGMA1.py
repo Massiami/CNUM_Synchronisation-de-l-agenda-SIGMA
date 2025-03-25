@@ -136,7 +136,6 @@ def comparer_etats(etat_precedent, etat_actuel):
                 "date": dt.now().strftime("%Y-%m-%d"),
                 "heure": dt.now().strftime("%H:%M:%S"),
                 "cellule": cle[1],
-                # La colonne "Feuille" est supprimée
                 "ancienne_donnee": format_cell_data(ancienne_donnee),
                 "nouvelle_donnee": format_cell_data(nouvelle_donnee)
             })
