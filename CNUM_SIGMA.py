@@ -489,12 +489,31 @@ def authenticate_google(token_path="token.json", credentials_path="credentials.j
 
 # Convertit une date et une heure en objet datetime.
 def convert_to_datetime(date_str, time_str):
+    # missing docstring
+    """_summary_
+
+    Args:
+        date_str (_type_): date according to the csv file
+        time_str (_type_): time according to the csv file
+
+    Returns:
+        _type_: _description_
+    """
     datetime_str = f"{date_str} {time_str}"
     return datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
 
 
 # Génère un identifiant unique.
 def sanitize_csv_id(input_str):
+    # missing docstring
+    """_summary_
+
+    Args:
+        input_str (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     allowed = set("abcdefghijklmnopqrstuvwxyz0123456789_")
     result = input_str.replace(" ", "_").lower()
     return "".join(c for c in result if c in allowed)
@@ -503,6 +522,15 @@ def sanitize_csv_id(input_str):
 # Charge tous les événements existants avec leur csv_id.  # line too long splitted
 # But = limiter le nombre de requêtes afin qu'elles puissent toutes être prises en compte.
 def fetch_existing_events(service):
+    # missing docstring
+    """_summary_
+
+    Args:
+        service (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     events_result = (
         service.events()
         .list(
@@ -527,6 +555,13 @@ def fetch_existing_events(service):
 # Associer des couleurs aux salles dans Google Calendar. # line too long splitted
 # Il y en a 11 disponibles dans Google Calendar.
 def sync_events(service, df):
+    # missing docstring
+    """_summary_
+
+    Args:
+        service (_type_): _description_
+        df (_type_): _description_
+    """
     room_colors = {
         "Salle UT2J sans ordi": 11,
         "UT2J GS027": 6,
