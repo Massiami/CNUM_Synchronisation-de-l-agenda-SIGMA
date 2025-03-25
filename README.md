@@ -81,7 +81,6 @@ Afin d’optimiser davantage ce code, nous avons identifié différentes pistes 
 
 Chaque commentaire devra respecter ce format afin d’assurer une meilleure lisibilité et organisation des informations.  
 
-* Suivre les modifications faites par les professeurs avec la création d’une feuille au sein du classeur Excel qui recense le avant/après pour avoir un suivi des modifications.
 * Envoyer un mail à chaque personne utilisant l’agenda pour indiquer qu’une modification (avec le nom de l’UE et la date) a été effectuée.
 * Avoir la possibilité de filtrer l’emploi du temps par UE, Lieux ou Intervenant. Pour cela, utiliser la fonction `groupby` de pandas.
 * Créer un fichier .exe afin de lancer le programme sans ouvrir Python.
