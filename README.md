@@ -25,18 +25,19 @@ Afin que ce script fonctionne correctement, différentes choses doivent être fa
 ## II- A faire en amont
 
 Dans ce dépôt GitHub, vous trouverez différents fichiers. Afin que le programme fonctionne correctement, vous devez :
-1. Créer un dossier dans votre environnement de travail et mettre le classeur Excel de base où vous ferez les modifications. 
-2. Télécharger les documents suivants et les mettre dans ce même dossier : 
+1. Faire un git clone ou :
+2. Créer un dossier dans votre environnement de travail et mettre le classeur Excel de base où vous ferez les modifications. 
+3. Télécharger les documents suivants et les mettre dans ce même dossier : 
    - `credentials.json`
    - `token.json`
    - `config.txt`
    - `CNUM_SIGMA.py`
-3. Remplir le fichier `config.txt` qui contiendra les chemins d’accès à ces documents. Tout est indiqué dans ce fichier afin de vous aider à le remplir correctement. 
-4. Ouvrir la console du système de votre ordinateur ou anaconda prompt si vous avez Spider. Puis copier-coller ceci : 
+4. Remplir le fichier `config.txt` qui contiendra les chemins d’accès à ces documents. Tout est indiqué dans ce fichier afin de vous aider à le remplir correctement. 
+5. Ouvrir la console du système de votre ordinateur ou anaconda prompt si vous avez Spider. Puis copier-coller ceci : 
    - **pip install google-api-python-client**
    - **pip install google-auth-oauthlib**
-5. Assurez-vous d’avoir l’identifiant et le mot de passe de l’adresse mail du master SIGMA. 
-6. Sur le calendrier Excel de base, s’assurer que : 
+6. Assurez-vous d’avoir l’identifiant et le mot de passe de l’adresse mail du master SIGMA. 
+7. Sur le calendrier Excel de base, s’assurer que : 
 - La colonne date est bien la **colonne E**
 - La colonne Vendredi après-midi est bien la **colonne O**
 - La ligne avec “Lu Matin”, “..., “Ve Aprem” est bien la **ligne 5**
@@ -46,14 +47,21 @@ Normalement, aucun changement à faire, ce sont les paramètres par défaut de v
 
 ## III- Lorsque vous faites des modifications d’emplois du temps sur le classeur Excel 
 
-1. Faites vos modifications de façon classique.
-2. Enregistrez.  
-3. Ouvrez le fichier `CNUM_SIGMA.py` sur votre environnement de travail (Thonny, Pyzo, Spider, Python, etc.).
-4. Exécutez le script. 
-5. Ouvrez l’agenda Google associé à l’adresse mail du master SIGMA : vous avez accès à l’agenda.👍
+1. Ouvrez le fichier `CNUM_SIGMA.py` sur votre environnement de travail (Thonny, Pyzo, Spider, Python, etc.).
+2. Exécutez le script une première fois.
+3. Ouvrez votre fichier Excel emploi du temps et faites vos modifications de façon classique.
+4. Enregistrez.  
+5. Retournez sur votre environnement de travail et exécutez à nouveau le code.
+7. Ouvrez l’agenda Google associé à l’adresse mail du master SIGMA : vous avez accès à l’agenda.👍
+8. De plus, un fichier `journal_modifications.csv` a été créé dans votre dossier.
 
+## IV- Attention : quelques explications 
 
-## IV- Accès des étudiants à l’agenda
+*Il est essentiel d'exécuter le script avant d'effectuer les modifications afin de mettre à jour le fichier journal_modifications.csv. Si vous intervenez sur les données avant de lancer le script, les changements seront intégrés à Google Agenda, mais aucune trace comparative (avant/après) ne sera enregistrée.
+
+*Lorsqu'un événement est ajouté via Google Agenda (qu'il soit personnel ou autre), il reste enregistré et ne sera pas modifié, même si des changements sont effectués dans le fichier Excel. 
+
+## V- Accès des étudiants à l’agenda
 
 Afin que les étudiants puissent avoir accès à l’agenda Google en ligne, nous pensons que le mieux est un partage d’agenda Google au début de l’année selon la procédure suivante : 
 
@@ -68,20 +76,21 @@ Afin que les étudiants puissent avoir accès à l’agenda Google en ligne, nou
 *Les invitations à des agendas groupés incluent des liens vers les agendas.*
 *Les utilisateurs reçoivent des notifications par e-mail lorsque des agendas sont partagés. Ces notifications par e-mail contiennent un lien Ajouter à l'agenda. Si un utilisateur clique sur ce lien, puis sur Ajouter un agenda, l'agenda s'affiche dans la liste "Autres agendas" de cet utilisateur.*
 
-## V- Pistes d’amélioration
+## VI- Pistes d’amélioration
 
 Afin d’optimiser davantage ce code, nous avons identifié différentes pistes d’améliorations possibles ainsi que quelques recommandations : 
 
 * Arriver à récupérer les horaires précis dans les commentaires et les ajuster directement sur l’agenda. Pour l’instant, le code parvient uniquement à adapter l’horaire quand il détecte un commentaire au format “9h-12h”. Par exemple, “8h30-12h30” ne fonctionne pas. De plus, nous recommandons une harmonisation lors de l’écriture des nouveaux horaires. Nous pensons que le mieux est le format “9h-12h” à la ligne, sans rien d’autre avant ou après. 
 * Afin d'harmoniser la présentation des commentaires, nous recommandons aux professeurs d'utiliser le format suivant :
-- Horaire précis : [ex. 10h-12h]
-- Nom de l’intervenant(e) : [ex. M. Marc Lang]
-- Salle de cours : [ex. 1113 Ensat]
-- Autres informations : [ex. prévoir un ordinateur portable]
+*Horaire précis : [ex. 10h-12h]*
+*Nom de l’intervenant(e) : [ex. M. Marc Lang]*
+*Salle de cours : [ex. 1113 Ensat]*
+*Autres informations : [ex. prévoir un ordinateur portable]*
 
 Chaque commentaire devra respecter ce format afin d’assurer une meilleure lisibilité et organisation des informations.  
 
-* Suivre les modifications faites par les professeurs avec la création d’une feuille au sein du classeur Excel qui recense le avant/après pour avoir un suivi des modifications.
 * Envoyer un mail à chaque personne utilisant l’agenda pour indiquer qu’une modification (avec le nom de l’UE et la date) a été effectuée.
 * Avoir la possibilité de filtrer l’emploi du temps par UE, Lieux ou Intervenant. Pour cela, utiliser la fonction `groupby` de pandas.
 * Créer un fichier .exe afin de lancer le programme sans ouvrir Python.
+* Factoriser le script pour une plus grande lisibilité.
+* Définir dès le début du script les lignes et colonnes correspondant au tableau concerné, puis d'externaliser ces paramètres dans un fichier de configuration séparé. Le but est d'éviter que le script ne soit limité à un tableau fixe.
