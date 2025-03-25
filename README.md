@@ -82,10 +82,10 @@ Afin d’optimiser davantage ce code, nous avons identifié différentes pistes 
 
 * Arriver à récupérer les horaires précis dans les commentaires et les ajuster directement sur l’agenda. Pour l’instant, le code parvient uniquement à adapter l’horaire quand il détecte un commentaire au format “9h-12h”. Par exemple, “8h30-12h30” ne fonctionne pas. De plus, nous recommandons une harmonisation lors de l’écriture des nouveaux horaires. Nous pensons que le mieux est le format “9h-12h” à la ligne, sans rien d’autre avant ou après. 
 * Afin d'harmoniser la présentation des commentaires, nous recommandons aux professeurs d'utiliser le format suivant :
-- *Horaire précis : [ex. 10h-12h]*
-- *Nom de l’intervenant(e) : [ex. M. Marc Lang]*
-- *Salle de cours : [ex. 1113 Ensat]*
-- *Autres informations : [ex. prévoir un ordinateur portable]*
+*Horaire précis : [ex. 10h-12h]*
+*Nom de l’intervenant(e) : [ex. M. Marc Lang]*
+*Salle de cours : [ex. 1113 Ensat]*
+*Autres informations : [ex. prévoir un ordinateur portable]*
 
 Chaque commentaire devra respecter ce format afin d’assurer une meilleure lisibilité et organisation des informations.  
 
