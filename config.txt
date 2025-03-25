@@ -2,18 +2,12 @@
 # Attention : tous ces documents doivent être DANS LE MEME DOSSIER.
 # Assurez-vous de changer les antislash en slash
 
-<<<<<<< HEAD
 # Fichier Excel d'origine, sur lequel vous faites les modifications 
 excel_file_path = C:/Users/hp/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/test.xlsx
-=======
-#Fichier Excel d'origine, sur lequel vous faites les modifications 
-excel_file_path = C:/Users/loure/CNUM/synchro_prof/CNUM_Synchronisation-de-l-agenda-SIGMA/test.xlsx
->>>>>>> 3d645701a0ddae56ebaf69530e63fd1e2e4ffa80
 
-# Feuille sur lesquelle vous avez fait les modifications 
+# Feuille sur laquelle vous avez fait les modifications 
 sheet_name = M1 2324
 
-<<<<<<< HEAD
 # Fichier output_csv (par défaut dans le même dossier)
 output_csv = C:/Users/hp/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/output.csv
 
@@ -22,19 +16,6 @@ modifications_csv = C:/Users/hp/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/jour
 
 # Jeton que vous devez télécharger sur GitHub (token.json)
 token_path = C:/Users/hp/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/token.json
-=======
-#Fichier enregistrement des modifications 
-modifications_csv = C:/Users/loure/CNUM/synchro_prof/CNUM_Synchronisation-de-l-agenda-SIGMA/journal_modifications.csv
-
-#fichier output_csv (par défaut dans le même dossier)
-output_csv = C:/Users/loure/CNUM/synchro_prof/CNUM_Synchronisation-de-l-agenda-SIGMA/output.csv
-
-#jeton que vous devez télécharger sur GitHub (token.json)
-token_path = C:/Users/loure/CNUM/synchro_prof/CNUM_Synchronisation-de-l-agenda-SIGMA/token.json
-
-#credentials que vous devez télécharger sur GitHub (credentials.json)
-credentials_path = C:/Users/loure/CNUM/synchro_prof/CNUM_Synchronisation-de-l-agenda-SIGMA/credentials.json
->>>>>>> 3d645701a0ddae56ebaf69530e63fd1e2e4ffa80
 
 # Credentials que vous devez télécharger sur GitHub (credentials.json)
 credentials_path = C:/Users/hp/CNUM/CNUM_Synchronisation-de-l-agenda-SIGMA/credentials.json
